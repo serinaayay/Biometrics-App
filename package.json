@@ -21,7 +21,8 @@
     "react-native": "0.79.4",
     "react-native-modal-datetime-picker": "^18.0.0",
     "react-native-reanimated": "~3.17.4",
-    "react-native-safe-area-context": "5.4.0"
+    "react-native-safe-area-context": "5.4.0",
+    "expo-router": "~5.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
