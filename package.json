@@ -11,9 +11,10 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
     "expo": "^53.0.15",
     "expo-status-bar": "~2.2.3",
-    "nativewind": "latest",
+    "nativewind": "^4.1.23",
     "react": "19.0.0",
     "react-native": "0.79.4",
     "react-native-reanimated": "~3.17.4",
@@ -27,7 +28,7 @@
     "eslint-config-prettier": "^10.1.2",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
-    "tailwindcss": "^3.4.0",
+    "tailwindcss": "^3.4.17",
     "typescript": "~5.8.3"
   },
   "main": "node_modules/expo/AppEntry.js",
