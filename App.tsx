@@ -1,50 +1,10 @@
-import { Dimensions, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+import ProfileScreen from './ProfileScreen';
+
 const { width, height } = Dimensions.get('window');
 
-export default function HomeScreen() {
-  return (
-    <View>
-      <View style ={styles.signUpContainer}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>Sign Up</Text>
-      </View>
-      <Text style={{
-        textAlign: 'center',
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginVertical: 20
-      }}>
-        Personal Information
-      </Text>
-      <View style={styles.fieldContainer}>
-        <ScrollView>
-          <View>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10 }}>Full Name</Text>
-            <TextInput
-              placeholder="Enter your username"
-              placeholderTextColor="#9E9A9A"
-              style={{
-                flex: 1,
-                paddingLeft: 10,
-                paddingTop: 15,
-                marginTop: height * 0.1,
-                fontSize: width * 0.04,
-                width: width * 0.8,
-                backgroundColor: '#FFFFFF',
-                alignContent: 'center',
-                borderRadius: width * 0.03,
-                
-              }}/>
-          </View>
-        </ScrollView>
-
-        <View style={{
-            bottom: height * 1.1,
-            width: width * 0.8,
-            height: height * 0.2}}
-          className="absolute self-center items-center justify-end bg-[#093FB4] rounded-[10px]"/>
-      </View>
-    </View>
-  );
+export default function App() {
+  return <ProfileScreen />;
 }
 
 const styles = StyleSheet.create({
