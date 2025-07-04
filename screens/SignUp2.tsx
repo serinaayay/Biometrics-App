@@ -6,12 +6,12 @@ import { RootStackParamList } from '../App';
 type Props = NativeStackScreenProps<RootStackParamList, 'SignUp2'>;
 
 const { width, height } = Dimensions.get('window');
+const options = ['Elementary', 'High School', 'Undergraduate/College', 'Vocational '];
 
 export default function HomeScreen({ navigation }: Props){
-  const [isChecked, setChecked] = useState(false);
-  const [isChecked2, setChecked2] = useState(false);
-  const [isChecked3, setChecked3] = useState(false);
-  const [isChecked4, setChecked4] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
+
 
   // for handling user input skills
   const [skills, setSkills] = useState<string[]>([]);
@@ -32,7 +32,7 @@ export default function HomeScreen({ navigation }: Props){
   };
 
   return (
-    <View className="flex-1">
+    <View style={{flex:1, backgroundColor: "#FFFFFF"}}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
         <View style={styles.signUpContainer}>
           <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>Sign Up</Text>
@@ -41,68 +41,43 @@ export default function HomeScreen({ navigation }: Props){
         <Text style={{ fontSize: 23, fontWeight: 'bold', color: '#000000', marginTop: 350, marginLeft: 20 }}>Educational Background</Text>
         <View style={styles.fieldContainer}>
           <View>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, marginLeft: 10 }}>Educational Attainment
-              <Text style={{ color: '#DD3737' }}> *</Text>
-          </Text> 
-            <TextInput //dropdown
-              style={{
-                flex: 1,
-                paddingLeft: 20,
-                paddingTop: 10,
-                marginTop: height * 0.02,
-                width: width * 0.8,
-                height: height * 0.5,
-                backgroundColor: '#FFFFFF',
-                alignContent: 'center',
-                borderRadius: width * 0.05,
-                textAlign: 'left',
-                marginLeft: 10,
-                borderColor: '#ccc',
-                borderWidth: 1,
-              }}
-            />
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 5, marginLeft: 10,}}>Educational Attainment
+                <Text style={{ color: '#DD3737' }}> *</Text>
+              </Text>
+              <Pressable onPress={() => setDropdownVisible(!isDropdownVisible)} style={styles.dropdownButton}>
+                <Text style={{marginRight: 20}}>{selectedOption || "Select your educational attainment"}
+                  <Text style={{marginLeft: 200,}}> ▼ </Text>
+                </Text>
+              </Pressable>
+              
+              {isDropdownVisible && (
+                <View style={styles.dropdownList}>
+                  {options.map((option, index) => (
+                    <Pressable
+                      key={index}
+                      onPress={() => {
+                        setSelectedOption(option);
+                        setDropdownVisible(false);
+                      }}
+                      style={styles.dropdownItem}
+                    >
+                      <Text>{option}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+              )}
 
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 10 }}>Degree</Text>
             <TextInput
               placeholder="Enter your full name"
               placeholderTextColor="#9E9A9A"
-              style={{
-                flex: 1,
-                paddingLeft: 20,
-                paddingTop: 10,
-                marginTop: height * 0.02,
-                width: width * 0.8,
-                height: height * 0.5,
-                backgroundColor: '#FFFFFF',
-                alignContent: 'center',
-                borderRadius: width * 0.05,
-                textAlign: 'left',
-                marginLeft: 10,
-                borderColor: '#ccc',
-                borderWidth: 1,
-              }}
-            />
+              style={styles.inputFields}/>
 
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 10 }}>College/University</Text>
             <TextInput
               placeholder="'N/A' if not applicable"
               placeholderTextColor="#9E9A9A"
-              style={{
-                flex: 1,
-                paddingLeft: 20,
-                paddingTop: 10,
-                marginTop: height * 0.02,
-                width: width * 0.8,
-                height: height * 0.5,
-                backgroundColor: '#FFFFFF',
-                alignContent: 'center',
-                borderRadius: width * 0.05,
-                marginLeft: 10,
-                marginBottom: 15,
-                borderColor: '#ccc',
-                borderWidth: 1,
-              }}
-            />
+              style={styles.inputFields}/>
           </View>
         </View>
 
@@ -113,25 +88,24 @@ export default function HomeScreen({ navigation }: Props){
             <TextInput
               placeholder="'N/A' If not applicable"
               placeholderTextColor="#9E9A9A"
-              style={{
-                flex: 1,
-                paddingLeft: 20,
-                paddingTop: 10,
-                marginTop: height * 0.02,
-                width: width * 0.8,
-                height: height * 0.01,
-                backgroundColor: '#FFFFFF',
-                alignContent: 'center',
-                borderRadius: width * 0.05,
-                textAlign: 'left',
-                marginLeft: 10,
-                borderColor: '#ccc',
-                borderWidth: 1,
-              }}
-            />
+              style={styles.inputFields}/>
 
           <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, marginLeft: 10 }}>Skills</Text>
           
+          <TextInput
+            value={inputSkill}
+            onChangeText={setInputSkill}
+            onSubmitEditing={handleSkillInput}
+            placeholder="Type a skill you possess"
+            placeholderTextColor="#9E9A9A"
+            style={styles.inputFields}
+            returnKeyType="done"
+            onKeyPress={({ nativeEvent }) => {
+              if (nativeEvent.key === ' ' || nativeEvent.key === ',') {
+                handleSkillInput();
+              }
+            }}/>
+
           <View style={styles.skillsSpacing}>
             {skills.map((skill, index) => (
               <View
@@ -145,58 +119,19 @@ export default function HomeScreen({ navigation }: Props){
                   marginBottom: 3,
                   marginTop: 10,
                   marginLeft: 15,
+                  marginHorizontal:'auto'
                 }}>
                 <Text style={{ color: '#FFFFFF', marginRight: 33, alignContent: 'center'}}>{skill}</Text>
-                <Text style={{ color: '#FFFFFF' }} onPress={() => removeSkill(index)}>×</Text>
+                <Text style={{ color: '#FFFFFF', marginLeft:40}} onPress={() => removeSkill(index)}>×</Text>
               </View>
             ))}
           </View>
-          
-          <TextInput
-            value={inputSkill}
-            onChangeText={setInputSkill}
-            onSubmitEditing={handleSkillInput}
-            placeholder="Type a skill you possess"
-            placeholderTextColor="#9E9A9A"
-            style={{
-              flex: 1,
-              paddingLeft: 20,
-              marginTop: height * 0.02,
-              width: width * 0.8,
-              height: height * 0.01,
-              backgroundColor: '#FFFFFF',
-              alignContent: 'center',
-              borderRadius: width * 0.05,
-              marginLeft: 10,
-              borderColor: '#ccc',
-              borderWidth: 1,
-            }}
-            returnKeyType="done"
-            onKeyPress={({ nativeEvent }) => {
-              if (nativeEvent.key === ' ' || nativeEvent.key === ',') {
-                handleSkillInput();
-              }
-            }}/>
 
           <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 10 }}>Work Experience</Text>
             <TextInput
               placeholder="'N/A' If not applicable"
               placeholderTextColor="#9E9A9A"
-              style={{
-                flex: 1,
-                paddingLeft: 20,
-                paddingTop: 10,
-                marginTop: height * 0.02,
-                width: width * 0.8,
-                height: height * 0.5,
-                backgroundColor: '#FFFFFF',
-                alignContent: 'center',
-                borderRadius: width * 0.05,
-                marginLeft: 10,
-                marginBottom: 15,
-                borderColor: '#ccc',
-                borderWidth: 1,
-              }}/>
+              style={styles.inputFields}/>
 
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, marginLeft: 10 }}>SSS Number
               <Text style={{ color: '#DD3737' }}> *</Text>
@@ -204,21 +139,7 @@ export default function HomeScreen({ navigation }: Props){
             <TextInput
               placeholder="'N/A' If not applicable"
               placeholderTextColor="#9E9A9A"
-              style={{
-                flex: 1,
-                paddingLeft: 20,
-                paddingTop: 10,
-                marginTop: height * 0.02,
-                width: width * 0.8,
-                height: height * 0.5,
-                backgroundColor: '#FFFFFF',
-                alignContent: 'center',
-                borderRadius: width * 0.05,
-                marginLeft: 10,
-                marginBottom: 15,
-                borderColor: '#ccc',
-                borderWidth: 1,
-              }}/>
+              style={styles.inputFields}/>
           </View>
         </View>
 
@@ -229,9 +150,9 @@ export default function HomeScreen({ navigation }: Props){
           </View>
         </Pressable>
 
-        <Pressable onPress={() => navigation.navigate('LogIn')}>
+        <Pressable onPress={() => navigation.navigate('ProfileScreen')}>
           <View style={styles.nextButton}>
-            <Text style={{fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10, textAlign: 'center'}} onPress={() => navigation.navigate('LogIn')}>Verify</Text>
+            <Text style={{fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10, textAlign: 'center'}} onPress={() => navigation.navigate('ProfileScreen')}>Verify</Text>
           </View>
         </Pressable>
         </View>       
@@ -254,40 +175,44 @@ const styles = StyleSheet.create({
   },
 
   fieldContainer: {
-    marginTop: height * 0.03,
-    marginBottom: height * 0.01,
-    width: width * 0.9,
-    borderRadius: width * 0.03,
     backgroundColor: '#EFF5FF',
-    shadowColor: '#000000',
-    shadowOffset: { width: 10, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 0.1,
-    elevation: 0.3,
-    height: height * 0.44,
-    alignSelf: 'center',
+    borderRadius: 10,
+    paddingTop: 20,
+    paddingBottom: 30,
+    marginTop: 15,
+    marginBottom: 10,
     alignItems: 'center',
+    alignSelf: 'center',
+    width: width * 0.9,
+    justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 20, height: 20 },
+    shadowOpacity: 30,
+    shadowRadius: 0.1,
+    elevation: 0.8,
   },
 
   fieldContainer2: {
-    marginTop: height * 0.03,
-    marginBottom: height * 0.04,
-    width: width * 0.9,
-    borderRadius: width * 0.03,
     backgroundColor: '#EFF5FF',
-    shadowColor: '#000000',
-    shadowOffset: { width: 10, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 0.1,
-    elevation: 0.3,
-    height: height * 0.60,
-    alignSelf: 'center',
+    borderRadius: 10,
+    paddingTop: 20,
+    paddingBottom: 30,
+    marginTop: 15,
+    marginBottom: 10,
     alignItems: 'center',
-    paddingBottom: 20
+    alignSelf: 'center',
+    width: width * 0.9,
+    justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 20, height: 20 },
+    shadowOpacity: 30,
+    shadowRadius: 0.1,
+    elevation: 0.8,
+
   },
 
   nextButton: {
-    marginTop: height * 0.001,
+    marginTop: height * 0.03,
     marginBottom: height * 0.05,
     width: width * 0.40,
     borderRadius: width * 0.05,
@@ -308,5 +233,48 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap', 
     justifyContent: 'flex-start'
 
-  }
+  },
+  
+  inputFields:{
+    backgroundColor: '#FFFFFF',
+    borderRadius: width * 12,
+    width: width * 0.8,
+    height: 50,
+    marginLeft: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 15,
+    paddingLeft: 15,
+    borderColor: '#DBDBDB',
+    borderWidth: 1,
+
+  },
+  dropdownList: {
+    position: 'absolute',
+    top: 65,
+    marginLeft: 20,
+    width: width * 0.8,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    zIndex: 1,
+  },
+  dropdownItem: {
+    padding: 15,
+    borderBottomColor: '#eee',
+    borderBottomWidth: 1,
+  },
+  dropdownButton: {
+    paddingLeft: 20,
+    paddingVertical: 15,
+    width: width * 0.8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: width * 12,
+    marginLeft: 10,
+    borderColor: '#DBDBDB',
+    borderWidth: 1,
+    height: height * 0.07,
+    marginTop: 10
+    
+  },
+
 });

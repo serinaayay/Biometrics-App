@@ -24,7 +24,7 @@ export default function HomeScreen({ navigation }: Props) {
   const [date, setDate] = useState(new Date());
 
   return (
-    <View className="flex-1">
+    <View style={{flex:1, backgroundColor: "#FFFFFF"}}>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
       <View style={styles.signUpContainer}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>Sign Up</Text>
@@ -33,39 +33,23 @@ export default function HomeScreen({ navigation }: Props) {
       <Text style={{ fontSize: 23, fontWeight: 'bold', color: '#000000', marginTop: 350, marginLeft: 20 }}>Personal Information</Text>
       <View style={styles.fieldContainer}>
         <View>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, marginLeft: 10}}>Full Name
-            <Text style={{ color: '#DD3737' }}> *</Text>
-          </Text>
-          <TextInput
-            placeholder="Enter your full name"
-            placeholderTextColor="#9E9A9A"
-            style={{
-              flex: 1,
-              paddingLeft: 20,
-              paddingTop: 10,
-              marginTop: height * 0.02,
-              width: width * 0.8,
-              height: height * 0.5,
-              backgroundColor: '#FFFFFF',
-              alignContent: 'center',
-              borderRadius: width * 0.05,
-              textAlign: 'left',
-              marginLeft: 10
-            }}
-          />
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 2, marginLeft: 20 }}>Full Name</Text>
+            <TextInput
+                placeholder="Enter your full name"
+                placeholderTextColor="#9E9A9A"
+                style={styles.inputFields}/>
 
-          <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 10}}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 20}}>
             Gender<Text style={{ color: '#DD3737' }}> *</Text>
           </Text>
 
-          <View style={{ flexDirection: 'row', marginTop: height * 0.02 }}>
+          <View style={{ flexDirection: 'row', marginTop: height * 0.02, marginLeft: 25}}>
             <Checkbox
               value={isMale}
               onValueChange={setChecked1}
               color={isMale ? '#4B70E0' : undefined}
               style={{
                 paddingTop: height * 0.02,
-                marginLeft: 10,
                 marginTop: height * 0.02,
                 borderRadius: width * 1.0,
                 width: width * 0.05,
@@ -107,30 +91,20 @@ export default function HomeScreen({ navigation }: Props) {
                 flexDirection: 'row',
               }}
             />
-            <Text style={{ fontSize: 15, fontWeight: 'bold', marginTop: 15, marginLeft: 9 }}>
-              Prefer not to say
+            <Text style={{ fontSize: 15, fontWeight: 'bold', marginTop: 10, marginLeft: 9 }}>
+              Prefer not {'\n'} to say
             </Text>
           </View>
 
-          <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 25, marginLeft: 10}}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 20}}>
             Date of Birth<Text style={{ color: '#DD3737' }}> *</Text>
           </Text>
             <TextInput
               placeholderTextColor="#9E9A9A"
               value={date.toLocaleDateString()}
               editable={false}
-              style={{
-                flex: 1,
-                paddingLeft: 20,
-                paddingTop: 10,
-                marginTop: 10,
-                width: width * 0.6,
-                backgroundColor: '#FFFFFF',
-                alignContent: 'center',
-                borderRadius: width * 0.05,
-                textAlign: 'left',
-                marginLeft: 10
-              }}/>
+              style={styles.inputFields}/>
+
           <Pressable onPress={() => setShow(true)}>
             <Image
               source={require('../assets/calendar.png')}
@@ -138,7 +112,7 @@ export default function HomeScreen({ navigation }: Props) {
                 width: width * 0.06,
                 height: height * 0.04,
                 opacity: 100,
-                marginLeft: width * 0.5,
+                marginLeft: width * 0.70,
                 marginTop: -40,
               }}/>
             
@@ -154,45 +128,23 @@ export default function HomeScreen({ navigation }: Props) {
             />
           </Pressable>
 
-          <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 10}}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 20}}>
             Place of Birth
           </Text>
           <TextInput
             placeholder="Ex: Manila"
             placeholderTextColor="#9E9A9A"
-            style={{
-              flex: 1,
-              paddingLeft: 20,
-              paddingTop: 10,
-              marginTop: 10,
-              width: width * 0.6,
-              backgroundColor: '#FFFFFF',
-              alignContent: 'center',
-              borderRadius: width * 0.05,
-              textAlign: 'left',
-              marginLeft: 10,
-            }}/>
+            style={styles.inputFields}/>
           
-          <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 10}}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 20}}>
             Nationality
           </Text>
           <TextInput
             placeholder="Ex: Filipino"
             placeholderTextColor="#9E9A9A"
-            style={{
-              flex: 1,
-              paddingLeft: 20,
-              paddingTop: 10,
-              marginTop: 10,
-              width: width * 0.6,
-              backgroundColor: '#FFFFFF',
-              alignContent: 'center',
-              borderRadius: width * 0.05,
-              textAlign: 'left',
-              marginLeft: 10
-            }}/>
+            style={styles.inputFields}/>
           
-          <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 10}}>Marital Status</Text>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 20}}>Marital Status</Text>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', marginTop: height * 0.02 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
             <Checkbox
@@ -200,7 +152,7 @@ export default function HomeScreen({ navigation }: Props) {
               onValueChange={setChecked4}
               color={isSingle ? '#4B70E0' : undefined}
               style={{
-                marginLeft: 10,
+                marginLeft: 30,
                 borderRadius: width * 1.0,
                 width: width * 0.05,
                 height: height * 0.03,
@@ -209,13 +161,13 @@ export default function HomeScreen({ navigation }: Props) {
             <Text style={{ fontSize: 15, fontWeight: 'bold', marginLeft: 9 }}>Single</Text>
           </View>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%' }}>
+          <View style={{ flexDirection: 'row', width: '50%' }}>
             <Checkbox
               value={isMarried}
               onValueChange={setChecked5}
               color={isMarried ? '#4B70E0' : undefined}
               style={{
-                marginLeft: 10,
+                marginLeft: 30,
                 borderRadius: width * 1.0,
                 width: width * 0.05,
                 height: height * 0.03,
@@ -224,13 +176,13 @@ export default function HomeScreen({ navigation }: Props) {
             <Text style={{ fontSize: 15, fontWeight: 'bold', marginLeft: 9 }}>Married</Text>
           </View>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%', marginTop: 10 }}>
+          <View style={{ flexDirection: 'row', width: '50%', marginTop: 10 }}>
             <Checkbox
               value={isDivorced}
               onValueChange={setChecked6}
               color={isDivorced ? '#4B70E0' : undefined}
               style={{
-                marginLeft: 10,
+                marginLeft: 30,
                 borderRadius: width * 1.0,
                 width: width * 0.05,
                 height: height * 0.03,
@@ -239,13 +191,13 @@ export default function HomeScreen({ navigation }: Props) {
             <Text style={{ fontSize: 15, fontWeight: 'bold', marginLeft: 9 }}>Divorced</Text>
           </View>
 
-          <View style={{ flexDirection: 'row', alignItems: 'center', width: '50%', marginTop: 10 }}>
+          <View style={{ flexDirection: 'row', width: '50%', marginTop: 10 }}>
             <Checkbox
               value={isWidowed}
               onValueChange={setChecked7}
               color={isWidowed ? '#4B70E0' : undefined}
               style={{
-                marginLeft: 10,
+                marginLeft: 30,
                 borderRadius: width * 1.0,
                 width: width * 0.05,
                 height: height * 0.03,
@@ -255,80 +207,36 @@ export default function HomeScreen({ navigation }: Props) {
           </View>
         </View>
 
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 10}}>Temporary Address</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 30, marginLeft: 20}}>Temporary Address</Text>
           <TextInput
             placeholder="Ex: Filipino"
             placeholderTextColor="#9E9A9A"
-            style={{
-              flex: 1,
-              paddingLeft: 20,
-              paddingTop: 10,
-              marginTop: 10,
-              width: width * 0.8,
-              backgroundColor: '#FFFFFF',
-              alignContent: 'center',
-              borderRadius: width * 0.05,
-              textAlign: 'left',
-              marginLeft: 10
-            }}/>
+            style={styles.inputFields}/>
 
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, marginLeft: 10}}>Permanent Address
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 20}}>Permanent Address
             <Text style={{ color: '#DD3737' }}> *</Text>
           </Text>
           <TextInput
             placeholder="Enter your permanent address"
             placeholderTextColor="#9E9A9A"
-            style={{
-              flex: 1,
-              paddingLeft: 20,
-              paddingTop: 10,
-              marginTop: 10,
-              width: width * 0.8,
-              backgroundColor: '#FFFFFF',
-              alignContent: 'center',
-              borderRadius: width * 0.05,
-              textAlign: 'left',
-              marginLeft: 10
-            }}/>
+            style={styles.inputFields}/>
 
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, marginLeft: 10}}>Email Address
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 20}}>Email Address
             <Text style={{ color: '#DD3737' }}> *</Text>
           </Text>
           <TextInput
             placeholder="abcd123@gmail.com"
             placeholderTextColor="#9E9A9A"
-            style={{
-              flex: 1,
-              paddingLeft: 20,
-              paddingTop: 10,
-              marginTop: 10,
-              width: width * 0.8,
-              backgroundColor: '#FFFFFF',
-              alignContent: 'center',
-              borderRadius: width * 0.05,
-              textAlign: 'left',
-              marginLeft: 10
-            }}/>
-
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, marginLeft: 10}}>Contact Number
+            style={styles.inputFields}/>
+            
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 20 }}>SSS Number
             <Text style={{ color: '#DD3737' }}> *</Text>
-          </Text>
+            </Text>
           <TextInput
-            placeholder="Enter your permanent address"
+            placeholder="'N/A' If not applicable"
             placeholderTextColor="#9E9A9A"
-            style={{
-              flex: 1,
-              paddingLeft: 20,
-              paddingTop: 10,
-              marginTop: 10,
-              width: width * 0.8,
-              backgroundColor: '#FFFFFF',
-              alignContent: 'center',
-              borderRadius: width * 0.05,
-              textAlign: 'left',
-              marginLeft: 10, 
-              marginBottom: 15
-            }}/>
+            style={styles.inputFields}/>      
+
         </View>
       </View>
       
@@ -353,20 +261,37 @@ const styles = StyleSheet.create({
     marginTop: -height * 0.35,
     alignItems: 'center',
   },
-  fieldContainer: {
-    marginTop: height * 0.03,
-    marginBottom: height * 0.001,
-    width: width * 0.9,
-    borderRadius: width * 0.03,
-    backgroundColor: '#EFF5FF',
-    shadowColor: '#000000',
-    shadowOffset: { width: 15, height: 10 },
-    shadowOpacity: 1.0,
-    shadowRadius: 1.0,
-    elevation: 2.0,
-    height: height * 1.4,
-    alignSelf: 'center',
+
+  inputFields:{
+    backgroundColor: '#FFFFFF',
+    borderRadius: width * 12,
+    width: width * 0.8,
+    height: 50,
+    marginLeft: 20,
     alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 15,
+    paddingLeft: 15,
+    borderColor: '#DBDBDB',
+    borderWidth: 1,
+  },
+
+  fieldContainer: {
+    backgroundColor: '#EFF5FF',
+    borderRadius: 10,
+    paddingTop: 20,
+    paddingBottom: 30,
+    marginTop: 15,
+    marginBottom: 10,
+    alignItems: 'center',
+    alignSelf: 'center',
+    width: width * 0.9,
+    justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 20, height: 20 },
+    shadowOpacity: 30,
+    shadowRadius: 0.1,
+    elevation: 0.8,
   },
 
   nextButton: {
@@ -383,5 +308,5 @@ const styles = StyleSheet.create({
     height: height * 0.07,
     alignSelf: 'center',
     alignItems: 'center',
-  }
+  },
 });
