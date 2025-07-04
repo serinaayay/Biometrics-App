@@ -332,9 +332,11 @@ export default function HomeScreen({ navigation }: Props) {
         </View>
       </View>
       
+      <Pressable onPress={() => navigation.navigate('SignUp2')}>
       <View style={styles.nextButton}>
           <Text style={{fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10, textAlign: 'center'}} onPress={() => navigation.navigate('SignUp2')}>Next</Text>
         </View>
+      </Pressable>
     </ScrollView>
   </View>
   );
