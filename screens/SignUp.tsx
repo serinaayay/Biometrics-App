@@ -27,6 +27,7 @@ export default function HomeScreen({ navigation }: Props) {
   const [fullName, setFullName] = useState(userData.fullName || '');
   const [email, setEmail] = useState(userData.email || '');
   const [phoneNumber, setPhoneNumber] = useState(userData.phoneNumber || '');
+  const [phoneError, setPhoneError] = useState('');
   const [placeOfBirth, setPlaceOfBirth] = useState(userData.placeOfBirth || '');
   const [nationality, setNationality] = useState(userData.nationality || 'Filipino');
   const [temporaryAddress, setTemporaryAddress] = useState(userData.temporaryAddress || '');
@@ -64,6 +65,16 @@ export default function HomeScreen({ navigation }: Props) {
     setIsWidowed(selectedStatus === 'Widowed');
   };
 
+  // Handle phone number input with validation
+  const handlePhoneNumberChange = (text: string) => {
+    // Allow empty string or 'N/A'
+    if (text === '' || text.toLowerCase() === 'n/a') {
+      setPhoneNumber(text);
+      setPhoneError('');
+      return;
+    }
+  };
+
   // Get selected gender
   const getSelectedGender = (): 'Male' | 'Female' | 'Prefer not to say' | '' => {
     if (isMale) return 'Male';
@@ -83,6 +94,16 @@ export default function HomeScreen({ navigation }: Props) {
 
   // Handle next button press
   const handleNext = () => {
+    // Check for phone number validation error first
+    if (phoneError) {
+      Alert.alert(
+        'Validation Error',
+        'Please fix the contact number format before proceeding.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
     const formData = {
       fullName: fullName.trim(),
       gender: getSelectedGender(),
@@ -370,11 +391,11 @@ export default function HomeScreen({ navigation }: Props) {
               <Text style={{ color: '#DD3737' }}> *</Text>
             </Text>
             <TextInput
-              placeholder="'N/A' If not applicable"
+              placeholder="Example: 093"
               placeholderTextColor="#9E9A9A"
-              style={styles.inputFields}
+              style={[styles.inputFields, phoneError ? { borderColor: '#DD3737', borderWidth: 2 } : {}]}
               value={phoneNumber}
-              onChangeText={setPhoneNumber}
+              onChangeText={handlePhoneNumberChange}
               keyboardType="phone-pad"
             />
           </View>

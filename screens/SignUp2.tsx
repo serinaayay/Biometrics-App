@@ -16,7 +16,7 @@ import { useUser, validateEducationalInfo, validateEmploymentInfo } from '../con
 type Props = NativeStackScreenProps<RootStackParamList, 'SignUp2'>;
 
 const { width, height } = Dimensions.get('window');
-const options = ['Elementary', 'High School', 'Undergraduate/College', 'Vocational '];
+const options = ['Elementary', 'High School', 'Senior High School', 'Bachelor\'s Degree', 'Master\'s Degree', 'Doctorate'];
 
 export default function HomeScreen({ navigation }: Props) {
   const { userData, updateUserData } = useUser();
@@ -50,8 +50,46 @@ export default function HomeScreen({ navigation }: Props) {
     setSkills(newSkills);
   };
 
+  // Function to save user data to MongoDB
+  const saveUserToDatabase = async (completeUserData: any) => {
+    try {
+      // Use the correct IP address for React Native to connect to backend
+      // For iOS Simulator: 127.0.0.1, For Android Emulator: 10.0.2.2, For physical device: your computer's IP
+      const API_BASE_URL = 'http://192.168.68.146:5001';
+      
+      console.log('Attempting to save user to database at:', API_BASE_URL);
+      console.log('User data:', JSON.stringify(completeUserData, null, 2));
+      
+      const response = await fetch(`${API_BASE_URL}/api/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(completeUserData),
+      });
+
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Server error response:', errorData);
+        throw new Error(errorData.error || `Failed to save user data (Status: ${response.status})`);
+      }
+
+      const savedUser = await response.json();
+      console.log('✅ User saved to database successfully:', savedUser);
+      return savedUser;
+    } catch (error) {
+      console.error('❌ Error saving user to database:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      console.error('Error details:', errorMessage);
+      throw error;
+    }
+  };
+
   // Handle verify button press
-  const handleVerify = () => {
+  const handleVerify = async () => {
     const formData = {
       educationalAttainment: selectedOption || '',
       degree: degree.trim(),
@@ -80,16 +118,71 @@ export default function HomeScreen({ navigation }: Props) {
     // Save to context
     updateUserData(formData);
 
-    Alert.alert(
-      'Registration Complete!',
-      `Welcome ${userData.fullName}! Your profile has been created successfully.`,
-      [
-        {
-          text: 'View Profile',
-          onPress: () => navigation.navigate('ProfileScreen'),
-        },
-      ]
-    );
+    // Prepare complete user data for database
+    const completeUserData = {
+      // Use fullName directly
+      fullName: userData.fullName || '',
+      email: userData.email,
+      phoneNumber: userData.phoneNumber,
+      gender: userData.gender,
+      dateOfBirth: userData.dateOfBirth,
+      placeOfBirth: userData.placeOfBirth || '',
+      nationality: userData.nationality || 'Filipino',
+      maritalStatus: userData.maritalStatus,
+      temporaryAddress: userData.temporaryAddress || '',
+      permanentAddress: userData.permanentAddress,
+      
+      // Educational information
+      educationalAttainment: selectedOption || '',
+      degree: degree.trim(),
+      university: university.trim(),
+      
+      // Employment information  
+      currentJobTitle: currentJob.trim(), // Note: model expects currentJobTitle, not currentJob
+      skills: skills,
+      workExperience: workExperience.trim() ? parseInt(workExperience.trim()) || 0 : 0, // Convert to number
+      sssNumber: sssNumber.trim(),
+      
+      // Account status
+      isVerified: true,
+      isActive: true,
+      fingerprintEnabled: false, // Will be enabled when fingerprint is registered
+      
+      // Temporary fix for database constraint
+      fingerprintId: Date.now().toString(), // Use timestamp as unique ID
+    };
+
+    try {
+      // Save to MongoDB database
+      const savedUser = await saveUserToDatabase(completeUserData);
+      
+      Alert.alert(
+        'Registration Complete!',
+        `Welcome ${userData.fullName}! Your profile has been created successfully and saved to the database.`,
+        [
+          {
+            text: 'View Profile',
+            onPress: () => navigation.navigate('ProfileScreen'),
+          },
+        ]
+      );
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      Alert.alert(
+        'Registration Error',
+        `Your profile was created locally, but there was an error saving to the database: ${errorMessage}. Please check your internet connection and try again.`,
+        [
+          {
+            text: 'Continue Offline',
+            onPress: () => navigation.navigate('ProfileScreen'),
+          },
+          {
+            text: 'Try Again',
+            onPress: () => handleVerify(),
+          },
+        ]
+      );
+    }
   };
 
   return (

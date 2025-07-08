@@ -3,6 +3,19 @@ const express = require('express');
 const app = express();
 const PORT = 5001;
 
+// Enable CORS for React Native
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
+
 // Import models
 const User = require('./models/User');
 const Fingerprint = require('./models/Fingerprint');
@@ -52,10 +65,15 @@ app.get('/api/users/:id', async (req, res) => {
 // Create new user
 app.post('/api/users', async (req, res) => {
   try {
+    console.log('Creating user with data:', JSON.stringify(req.body, null, 2));
     const user = new User(req.body);
     await user.save();
+    console.log('User created successfully:', user.email);
     res.status(201).json(user);
   } catch (error) {
+    console.log('Error creating user:', error.message);
+    console.log('Error code:', error.code);
+    console.log('Error details:', error);
     if (error.code === 11000) {
       res.status(400).json({ error: 'Email already exists' });
     } else {
