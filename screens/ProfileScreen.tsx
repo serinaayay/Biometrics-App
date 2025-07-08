@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import {
   Alert,
@@ -10,9 +11,12 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import { RootStackParamList } from '../App';
 import { useUser } from '../context/UserContext';
 
-const ProfileScreen: React.FC = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'ProfileScreen'>;
+
+const ProfileScreen: React.FC<Props> = ({ navigation }) => {
   const { width } = useWindowDimensions();
   const { userData, resetUserData } = useUser();
   const styles = getStyles(width);
@@ -24,8 +28,17 @@ const ProfileScreen: React.FC = () => {
         text: 'Logout',
         style: 'destructive',
         onPress: () => {
+          // Reset user data
           resetUserData();
-          Alert.alert('Logout', 'You have been logged out!');
+
+          // Navigate to Login screen
+          navigation.reset({
+            index: 0,
+            routes: [{ name: 'LogIn' }],
+          });
+
+          // Show success message
+          Alert.alert('Success', 'You have been logged out successfully!');
         },
       },
     ]);
