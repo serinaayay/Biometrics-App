@@ -79,6 +79,15 @@ export default function HomeScreen({ navigation }: Props) {
     
     // Check if the cleaned text contains only numbers and + symbol (for international format)
     const phoneRegex = /^[\+]?[0-9]*$/;
+    
+    if (phoneRegex.test(cleanedText)) {
+      setPhoneNumber(text);
+      setPhoneError('');
+    } else {
+      // Show error but still update the field to show what user typed
+      setPhoneNumber(text);
+      setPhoneError('Contact number can only contain numbers, spaces, dashes, parentheses, and + symbol');
+    }
   };
 
   // Get selected gender
