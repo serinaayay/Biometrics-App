@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import {
+  Alert,
   Dimensions,
   Pressable,
   ScrollView,
@@ -8,7 +9,6 @@ import {
   Text,
   TextInput,
   View,
-  Alert,
 } from 'react-native';
 import { RootStackParamList } from '../App';
 import { useUser, validateEducationalInfo, validateEmploymentInfo } from '../context/UserContext';
@@ -31,6 +31,7 @@ export default function HomeScreen({ navigation }: Props) {
   const [currentJob, setCurrentJob] = useState(userData.currentJob || '');
   const [workExperience, setWorkExperience] = useState(userData.workExperience || '');
   const [sssNumber, setSssNumber] = useState(userData.sssNumber || '');
+  const [sssNumberError, setSssNumberError] = useState(userData.sssNumber || '');
 
   // for handling user input skills
   const [skills, setSkills] = useState<string[]>(userData.skills || []);
@@ -183,6 +184,34 @@ export default function HomeScreen({ navigation }: Props) {
         ]
       );
     }
+  };
+
+  const handleSSSNumberChange = (text: string): void => {
+      // Allow empty string or 'N/A'
+      if (text === '' || text.toLowerCase() === 'n/a') {
+        setSssNumber(text);
+        setSssNumberError('');
+        return;
+      }
+        // Remove all non-numerical chars
+      const cleaned = text.replace(/[^0-9]/g, '');
+
+      const sliced = cleaned.slice(0, 10);
+
+      let formatted = sliced;
+      if (sliced.length >= 2 && sliced.length <= 9) {
+          formatted = `${sliced.slice(0, 2)}-${sliced.slice(2)}`;
+      } else if (sliced.length === 10) {
+          formatted = `${sliced.slice(0, 2)}-${sliced.slice(2, 9)}-${sliced.slice(9)}`;
+      }
+
+      setSssNumber(formatted);
+
+      if (sliced.length === 10) {
+          setSssNumberError('');
+      } else {
+          setSssNumberError('SSS number must be 10 digits and must follow this format: ##-#######-#');
+      }
   };
 
   return (
@@ -346,10 +375,14 @@ export default function HomeScreen({ navigation }: Props) {
             <TextInput
               placeholder="'N/A' If not applicable"
               placeholderTextColor="#9E9A9A"
-              style={styles.inputFields}
+              style={[
+                styles.inputFields,
+                sssNumberError ? { borderColor: '#DD3737', borderWidth: 2 } : {},
+              ]}
               value={sssNumber}
-              onChangeText={setSssNumber}
-            />
+              onChangeText={handleSSSNumberChange}
+              keyboardType="default"
+              maxLength={12}/>
           </View>
         </View>
 
