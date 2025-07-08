@@ -73,6 +73,12 @@ export default function HomeScreen({ navigation }: Props) {
       setPhoneError('');
       return;
     }
+
+    // Remove any spaces, dashes, or parentheses for validation
+    const cleanedText = text.replace(/[\s\-\(\)]/g, '');
+    
+    // Check if the cleaned text contains only numbers and + symbol (for international format)
+    const phoneRegex = /^[\+]?[0-9]*$/;
   };
 
   // Get selected gender
