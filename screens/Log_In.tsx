@@ -17,8 +17,10 @@ const LogInScreen = ({ navigation }: Props) => {
         <View style={{borderRadius: 12,backgroundColor:'#FFFFFF', padding:4, marginTop: 8, marginBottom: 4 }}>
         
           <Text style={styles.Title}>Email</Text>
-          <TextInput style={styles.inputBox} placeholder="Enter your email" />
-
+          <TextInput style={styles.inputBox} 
+          placeholder="Enter your email"
+          keyboardType="email-address"/>
+          
           <Text style={styles.Title}>Password</Text>
           <TextInput style={styles.inputBox} placeholder="Enter your Password" />
 

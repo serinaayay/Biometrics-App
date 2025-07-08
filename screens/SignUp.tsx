@@ -229,13 +229,14 @@ export default function HomeScreen({ navigation }: Props) {
             placeholderTextColor="#9E9A9A"
             style={styles.inputFields}/>
             
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 20 }}>SSS Number
+        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 20 }}>Contact Number
             <Text style={{ color: '#DD3737' }}> *</Text>
             </Text>
           <TextInput
             placeholder="'N/A' If not applicable"
             placeholderTextColor="#9E9A9A"
-            style={styles.inputFields}/>      
+            style={styles.inputFields}
+            keyboardType="number-pad"/>      
 
         </View>
       </View>
