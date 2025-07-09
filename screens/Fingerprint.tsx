@@ -281,5 +281,4 @@ const styles = StyleSheet.create({
     
 
   },
-
 });

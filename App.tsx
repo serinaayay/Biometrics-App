@@ -11,7 +11,6 @@ import Verify from './screens/Verify';
 import Verify2 from './screens/Verify2';
 import InfoRegister from './screens/InfoRegister';
 
-
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
