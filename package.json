@@ -11,18 +11,24 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@react-native-community/datetimepicker": "8.4.1",
+    "@react-navigation/native": "^7.1.14",
+    "@react-navigation/native-stack": "^7.3.21",
     "@tailwindcss/vite": "^4.1.11",
     "expo": "^53.0.15",
-    "expo-checkbox": "~4.1.4",
+    "expo-checkbox": "^4.1.4",
     "expo-status-bar": "~2.2.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.16.2",
+    "native": "^0.3.3",
     "nativewind": "^4.1.23",
-    "react": "19.0.0",
+    "react": "^19.0.0",
     "react-native": "0.79.4",
+    "react-native-gesture-handler": "^2.27.1",
     "react-native-modal-datetime-picker": "^18.0.0",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
-    "expo-router": "~5.1.2"
+    "react-native-screens": "^4.11.1",
+    "react-native-walkthrough-tooltip": "^1.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -36,5 +42,18 @@
     "typescript": "~5.8.3"
   },
   "main": "node_modules/expo/AppEntry.js",
-  "private": true
+  "private": true,
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/serinaayay/Biometrics-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/serinaayay/Biometrics-App/issues"
+  },
+  "homepage": "https://github.com/serinaayay/Biometrics-App#readme"
 }

@@ -1,17 +1,17 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Dimensions, Pressable, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
+import { Dimensions, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
 import { RootStackParamList } from '../navigation/types';
 import '../global.css';
 
 const { width, height } = Dimensions.get('window');
-type Props = NativeStackScreenProps<RootStackParamList, 'InfoRegister'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'LogIn'>;
 
 const LogInScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.bgColor}>
       <View style={{ alignItems: 'center', marginBottom: 12 }}>
         <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#FFFFFF', marginLeft: 5 }}>
-          Sign Up
+          Sign In
         </Text>
       </View>
 
@@ -27,15 +27,13 @@ const LogInScreen = ({ navigation }: Props) => {
         <TextInput
           style={styles.inputBox}
           placeholder="Enter your email"
-          keyboardType="email-address"/>
+          keyboardType="email-address"
+        />
 
         <Text style={styles.Title}>Password</Text>
         <TextInput style={styles.inputBox} placeholder="Enter your Password" />
 
-        <Text style={styles.Title}>Confirm your Password</Text>
-        <TextInput style={styles.inputBox} placeholder="Confirm your Password" />
-
-        <Pressable onPress={() => navigation.navigate('SignUp')}>
+        <TouchableHighlight onPress={() => alert('Button Pressed!')}>
           <View
             style={{
               backgroundColor: '#4B70E0',
@@ -50,7 +48,7 @@ const LogInScreen = ({ navigation }: Props) => {
               Log In
             </Text>
           </View>
-        </Pressable>
+        </TouchableHighlight>
 
         <View style={styles.separator} />
 
@@ -75,7 +73,7 @@ const LogInScreen = ({ navigation }: Props) => {
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text
-          onPress={() => navigation.navigate('SignUp')}
+          onPress={() => navigation.navigate('InfoRegister')}
           style={{
             color: '#6289DD',
             fontSize: 14,
@@ -83,7 +81,7 @@ const LogInScreen = ({ navigation }: Props) => {
             marginLeft: 5,
             marginTop: 3,
           }}>
-          Sign In
+          Sign Up
         </Text>
         <Text
           onPress={() => alert('text pressed')}

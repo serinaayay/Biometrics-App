@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import { RootStackParamList } from '../App';
+import { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Verify2'>;
 
@@ -135,7 +135,7 @@ export default function HomeScreen({ navigation }: Props){
 
         <Pressable onPress={() => navigation.navigate('ProfileScreen')}>
                   <View style={styles.nextButton}>
-                    <Text style={{fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10, textAlign: 'center'}} onPress={() => navigation.navigate('ProfileScreen')}>Profile</Text>
+                    <Text style={{fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10, textAlign: 'center'}} onPress={() => navigation.navigate('ProfileScreen')}>Submit</Text>
                   </View>
                 </Pressable>
       </ScrollView>
@@ -307,5 +307,4 @@ const styles = StyleSheet.create({
     marginTop: 10
     
   },
-
 });

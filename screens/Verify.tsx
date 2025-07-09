@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Checkbox from 'expo-checkbox';
 import { useState } from 'react';
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import { RootStackParamList } from '../App';
+import { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Verify'>;
 
@@ -228,7 +228,7 @@ export default function HomeScreen({ navigation }: Props){
         </View>
         <Pressable onPress={() => navigation.navigate('Verify2')}>
                   <View style={styles.nextButton}>
-                    <Text style={{fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10, textAlign: 'center'}} onPress={() => navigation.navigate('Verify2')}>Verify</Text>
+                    <Text style={{fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10, textAlign: 'center'}} onPress={() => navigation.navigate('Verify2')}>Continue</Text>
                   </View>
                 </Pressable>
       </ScrollView>
@@ -365,5 +365,4 @@ const styles = StyleSheet.create({
     marginTop: 10
     
   },
-
 });

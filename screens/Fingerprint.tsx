@@ -10,7 +10,7 @@ import {
     Text,
     View
 } from 'react-native';
-import { RootStackParamList } from '../App';
+import { RootStackParamList } from '../navigation/types';
 import { useUser, validateEducationalInfo, validateEmploymentInfo } from '../context/UserContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Fingerprint'>;
@@ -281,5 +281,4 @@ const styles = StyleSheet.create({
     
 
   },
-
 });
