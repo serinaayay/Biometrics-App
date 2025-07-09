@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Checkbox from 'expo-checkbox';
 import { useState } from 'react';
 import {
+  Alert,
   Dimensions,
   Image,
   Pressable,
@@ -10,7 +11,6 @@ import {
   Text,
   TextInput,
   View,
-  Alert,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { RootStackParamList } from '../navigation/types';
@@ -72,11 +72,11 @@ export default function HomeScreen({ navigation }: Props) {
     if (text === '' || text.toLowerCase() === 'n/a') {
       setPhoneNumber(text);
       setPhoneError('');
-      return;
+      return; 
     }
 
     // Remove any spaces, dashes, or parentheses for validation
-    const cleanedText = text.replace(/[\s\-\(\)]/g, '');
+    const cleanedText = text.replace(/[\s\-\(\)]/g, '').slice(0,11);
     
     // Check if the cleaned text contains only numbers and + symbol (for international format)
     const phoneRegex = /^[\+]?[0-9]*$/;
@@ -87,7 +87,8 @@ export default function HomeScreen({ navigation }: Props) {
     } else {
       // Show error but still update the field to show what user typed
       setPhoneNumber(text);
-      setPhoneError('Contact number can only contain numbers, spaces, dashes, parentheses, and + symbol');
+      setPhoneError('Contact number can only contain numbers, spaces, dashes, parentheses, and + symbol.' +
+        'Please ensure that the number only contains 11 numbers.');
     }
   };
 
@@ -141,7 +142,7 @@ export default function HomeScreen({ navigation }: Props) {
     if (phoneError) {
       Alert.alert(
         'Validation Error',
-        'Please fix the contact number format before proceeding.',
+        'Strictly enter numeric values (ex: 0917000000).',
         [{ text: 'OK' }]
       );
       return;
@@ -295,8 +296,8 @@ export default function HomeScreen({ navigation }: Props) {
                   width: width * 0.06,
                   height: height * 0.04,
                   opacity: 100,
-                  marginLeft: width * 0.7,
-                  marginTop: -40,
+                  marginLeft: width * 0.73,
+                  marginTop: -width * 0.11,
                 }}
               />
 
@@ -453,7 +454,8 @@ export default function HomeScreen({ navigation }: Props) {
               style={[styles.inputFields, phoneError ? { borderColor: '#DD3737', borderWidth: 2 } : {}]}
               value={phoneNumber}
               onChangeText={handlePhoneNumberChange}
-              keyboardType="phone-pad"
+              keyboardType="numeric"
+              maxLength={11}
             />
             {phoneError ? (
               <Text style={{ color: '#DD3737', fontSize: 14, marginLeft: 20, marginTop: 5 }}>

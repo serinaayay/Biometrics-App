@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import {
+  Alert,
   Dimensions,
   Pressable,
   ScrollView,
@@ -8,7 +9,6 @@ import {
   Text,
   TextInput,
   View,
-  Alert,
 } from 'react-native';
 import { RootStackParamList } from '../navigation/types';
 import { useUser, validateEducationalInfo, validateEmploymentInfo } from '../context/UserContext';
@@ -31,7 +31,7 @@ export default function HomeScreen({ navigation }: Props) {
   const [currentJob, setCurrentJob] = useState(userData.currentJob || '');
   const [workExperience, setWorkExperience] = useState(userData.workExperience || '');
   const [sssNumber, setSssNumber] = useState(userData.sssNumber || '');
-  const [sssError, setSssError] = useState('');
+  const [sssNumberError, setSssNumberError] = useState('');
 
   // for handling user input skills
   const [skills, setSkills] = useState<string[]>(userData.skills || []);
@@ -51,17 +51,32 @@ export default function HomeScreen({ navigation }: Props) {
     setSkills(newSkills);
   };
 
-  const handleSSSNumberFormat = (text: string) => {
-    const cleanedText = text.replace(/[\s\-\(\)]/g, '');
-    const sssRegex = /^[0-9]*$/;
-    if (sssRegex.test(cleanedText)) {
-      setSssNumber(cleanedText);
-      setSssError('');
-    }
-    else {
+  const handleSSSNumberChange = (text: string): void => {
+      // Allow empty string or 'N/A'
+      if (text === '' || text.toLowerCase() === 'n/a') {
         setSssNumber(text);
-        setSssError('SSS number can only contain numbers');
-    }
+        setSssNumberError('');
+        return;
+      }
+        // Remove all non-numerical chars
+      const cleaned = text.replace(/[^0-9]/g, '');
+
+      const sliced = cleaned.slice(0, 10);
+
+      let formatted = sliced;
+      if (sliced.length >= 2 && sliced.length <= 9) {
+          formatted = `${sliced.slice(0, 2)}-${sliced.slice(2)}`;
+      } else if (sliced.length === 10) {
+          formatted = `${sliced.slice(0, 2)}-${sliced.slice(2, 9)}-${sliced.slice(9)}`;
+      }
+
+      setSssNumber(formatted);
+
+      if (sliced.length === 10) {
+          setSssNumberError('');
+      } else {
+          setSssNumberError('SSS number must be 10 digits and must follow this format: ##-#######-#');
+      }
   };
 
   // Function to save user data to MongoDB
@@ -360,12 +375,15 @@ export default function HomeScreen({ navigation }: Props) {
             <TextInput
               placeholder="'N/A' If not applicable"
               placeholderTextColor="#9E9A9A"
-              style={[styles.inputFields, sssError ? { borderColor: '#DD3737', borderWidth: 2 } : {}]}
+              style={[
+                styles.inputFields,
+                sssNumberError ? { borderColor: '#DD3737', borderWidth: 2 } : {},
+              ]}
               value={sssNumber}
-              onChangeText={handleSSSNumberFormat}
-              keyboardType="number-pad"
-            />
-            {sssError ? (
+              onChangeText={handleSSSNumberChange}
+              keyboardType="default"
+              maxLength={12}/>
+            {sssNumberError ? (
               <Text style={{
                 color: '#DD3737',
                 fontSize: 14,
@@ -374,7 +392,7 @@ export default function HomeScreen({ navigation }: Props) {
                 marginRight: 10,
                 flexWrap: 'wrap'
               }}>
-                {sssError}
+                {sssNumberError}
               </Text>
             ) : null}
           </View>
