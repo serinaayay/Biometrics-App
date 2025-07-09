@@ -9,9 +9,35 @@ const fingerprintSchema = new mongoose.Schema(
       required: true,
     },
 
-    // Simple fingerprint data
+    // Biometric template data
     fingerprintTemplate: {
-      type: String, // Stored as hash/encoded string
+      type: Object, // Stored as template object with minutiae data
+      required: true,
+      validate: {
+        validator: function(value) {
+          // Validate template structure
+          return value && 
+                 value.version && 
+                 value.algorithm &&
+                 typeof value.quality === 'number' &&
+                 Array.isArray(value.minutiae) &&
+                 value.signature;
+        },
+        message: 'Invalid fingerprint template structure'
+      }
+    },
+    
+    // Base64 encoded fingerprint image (optional, for reference)
+    fingerprintImage: {
+      type: String, // Base64 encoded image
+      required: false,
+    },
+    
+    // Template quality score
+    qualityScore: {
+      type: Number,
+      min: 0,
+      max: 1,
       required: true,
     },
 

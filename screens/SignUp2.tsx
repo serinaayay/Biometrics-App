@@ -10,7 +10,7 @@ import {
   View,
   Alert,
 } from 'react-native';
-import { RootStackParamList } from '../App';
+import { RootStackParamList } from '../navigation/types';
 import { useUser, validateEducationalInfo, validateEmploymentInfo } from '../context/UserContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignUp2'>;
@@ -31,6 +31,7 @@ export default function HomeScreen({ navigation }: Props) {
   const [currentJob, setCurrentJob] = useState(userData.currentJob || '');
   const [workExperience, setWorkExperience] = useState(userData.workExperience || '');
   const [sssNumber, setSssNumber] = useState(userData.sssNumber || '');
+  const [sssError, setSssError] = useState('');
 
   // for handling user input skills
   const [skills, setSkills] = useState<string[]>(userData.skills || []);
@@ -50,11 +51,23 @@ export default function HomeScreen({ navigation }: Props) {
     setSkills(newSkills);
   };
 
+  const handleSSSNumberFormat = (text: string) => {
+    const cleanedText = text.replace(/[\s\-\(\)]/g, '');
+    const sssRegex = /^[0-9]*$/;
+    if (sssRegex.test(cleanedText)) {
+      setSssNumber(cleanedText);
+      setSssError('');
+    }
+    else {
+        setSssNumber(text);
+        setSssError('SSS number can only contain numbers');
+    }
+  };
+
   // Function to save user data to MongoDB
   const saveUserToDatabase = async (completeUserData: any) => {
     try {
-      // Use the correct IP address for React Native to connect to backend
-      // For iOS Simulator: 127.0.0.1, For Android Emulator: 10.0.2.2, For physical device: your computer's IP
+     
       const API_BASE_URL = 'http://192.168.68.146:5001';
       
       console.log('Attempting to save user to database at:', API_BASE_URL);
@@ -161,7 +174,7 @@ export default function HomeScreen({ navigation }: Props) {
         `Welcome ${userData.fullName}! Your profile has been created successfully and saved to the database.`,
         [
           {
-            text: 'View Profile',
+            text: 'Continue',
             onPress: () => navigation.navigate('ProfileScreen'),
           },
         ]
@@ -174,7 +187,7 @@ export default function HomeScreen({ navigation }: Props) {
         [
           {
             text: 'Continue Offline',
-            onPress: () => navigation.navigate('ProfileScreen'),
+            onPress: () => navigation.navigate('Verify'),
           },
           {
             text: 'Try Again',
@@ -183,6 +196,7 @@ export default function HomeScreen({ navigation }: Props) {
         ]
       );
     }
+    
   };
 
   return (
@@ -346,10 +360,23 @@ export default function HomeScreen({ navigation }: Props) {
             <TextInput
               placeholder="'N/A' If not applicable"
               placeholderTextColor="#9E9A9A"
-              style={styles.inputFields}
+              style={[styles.inputFields, sssError ? { borderColor: '#DD3737', borderWidth: 2 } : {}]}
               value={sssNumber}
-              onChangeText={setSssNumber}
+              onChangeText={handleSSSNumberFormat}
+              keyboardType="number-pad"
             />
+            {sssError ? (
+              <Text style={{
+                color: '#DD3737',
+                fontSize: 14,
+                marginLeft: 10,
+                marginTop: 5,
+                marginRight: 10,
+                flexWrap: 'wrap'
+              }}>
+                {sssError}
+              </Text>
+            ) : null}
           </View>
         </View>
 

@@ -21,6 +21,12 @@ const User = require('./models/User');
 const Fingerprint = require('./models/Fingerprint');
 const FingerprintLog = require('./models/AuthenticationLog');
 
+// Import fingerprint processor
+const FingerprintProcessor = require('./utils/fingerprintProcessor');
+
+// Initialize fingerprint processor
+const fingerprintProcessor = new FingerprintProcessor();
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -116,7 +122,14 @@ app.delete('/api/users/:id', async (req, res) => {
 // Register a fingerprint for a user
 app.post('/api/fingerprint/register', async (req, res) => {
   try {
-    const { userId, fingerprintTemplate, fingerPosition } = req.body;
+    const { userId, fingerprintImage, fingerPosition } = req.body;
+
+    // Validate required fields
+    if (!userId || !fingerprintImage || !fingerPosition) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: userId, fingerprintImage (base64), and fingerPosition' 
+      });
+    }
 
     // Check if user exists
     const user = await User.findById(userId);
@@ -124,11 +137,34 @@ app.post('/api/fingerprint/register', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Create fingerprint record
+    // Check if user already has a fingerprint registered
+    const existingFingerprint = await Fingerprint.findOne({ userId, isActive: true });
+    if (existingFingerprint) {
+      return res.status(400).json({ 
+        error: 'User already has a fingerprint registered. Only one fingerprint per user is allowed.' 
+      });
+    }
+
+    // Process fingerprint image and generate template
+    const processingResult = fingerprintProcessor.processForEnrollment(fingerprintImage, {
+      fingerPosition,
+      userId: userId.toString()
+    });
+
+    if (!processingResult.success) {
+      return res.status(400).json({ 
+        error: `Fingerprint processing failed: ${processingResult.error}`,
+        quality: processingResult.quality
+      });
+    }
+
+    // Create fingerprint record with biometric template
     const fingerprint = new Fingerprint({
       userId,
-      fingerprintTemplate,
+      fingerprintTemplate: processingResult.template,
+      fingerprintImage, // Store original base64 image (optional)
       fingerPosition,
+      qualityScore: processingResult.quality,
     });
 
     await fingerprint.save();
@@ -141,8 +177,15 @@ app.post('/api/fingerprint/register', async (req, res) => {
       message: 'Fingerprint registered successfully',
       fingerprintId: fingerprint._id,
       fingerPosition,
+      quality: processingResult.quality,
+      templateInfo: {
+        version: processingResult.template.version,
+        algorithm: processingResult.template.algorithm,
+        minutiaeCount: processingResult.template.minutiaeCount
+      }
     });
   } catch (error) {
+    console.error('Fingerprint registration error:', error);
     res.status(400).json({ error: error.message });
   }
 });
@@ -155,16 +198,18 @@ app.post('/api/fingerprint/authenticate', async (req, res) => {
   let matchedFingerprint = null;
 
   try {
-    const { userId, fingerprintTemplate, fingerPosition } = req.body;
-    const deviceInfo = {
-      deviceId: req.headers['device-id'] || 'unknown',
-      deviceType: req.headers['device-type'] || 'unknown',
-      userAgent: req.headers['user-agent'] || 'unknown',
-    };
+    const { userId, fingerprintImage, fingerPosition } = req.body;
 
-    // Find user's fingerprints
-    const fingerprints = await Fingerprint.findByUser(userId);
-    if (fingerprints.length === 0) {
+    // Validate required fields
+    if (!userId || !fingerprintImage) {
+      return res.status(400).json({ 
+        error: 'Missing required fields: userId and fingerprintImage (base64)' 
+      });
+    }
+
+    // Find user's single fingerprint
+    const userFingerprint = await Fingerprint.findOne({ userId, isActive: true });
+    if (!userFingerprint) {
       failureReason = 'template_not_found';
 
       // Log failed attempt
@@ -174,26 +219,54 @@ app.post('/api/fingerprint/authenticate', async (req, res) => {
         authenticationResult: 'failure',
         failureReason,
         fingerprintData: {
-          fingerPosition,
+          fingerPosition: fingerPosition || 'unknown',
           processingTime: Date.now() - startTime,
           attempts: 1,
         },
-        deviceInfo,
         location: {
           ipAddress: req.ip || req.connection.remoteAddress,
           timestamp: new Date(),
         },
       }).save();
 
-      return res.status(404).json({ error: 'No fingerprints registered for this user' });
+      return res.status(404).json({ error: 'No fingerprint registered for this user' });
     }
 
-    // Simple template matching (in real app, use proper biometric algorithms)
-    matchedFingerprint = fingerprints.find(
-      (fp) => fp.fingerprintTemplate === fingerprintTemplate && fp.fingerPosition === fingerPosition
+    // Process input fingerprint and compare with stored template
+    const authResult = fingerprintProcessor.processForAuthentication(
+      fingerprintImage, 
+      userFingerprint.fingerprintTemplate
     );
 
-    if (matchedFingerprint) {
+    if (!authResult.success) {
+      failureReason = 'processing_error';
+
+      // Log failed attempt
+      await new FingerprintLog({
+        userId,
+        fingerprintId: userFingerprint._id,
+        authenticationResult: 'failure',
+        failureReason,
+        fingerprintData: {
+          fingerPosition: fingerPosition || userFingerprint.fingerPosition,
+          processingTime: Date.now() - startTime,
+          attempts: 1,
+        },
+        location: {
+          ipAddress: req.ip || req.connection.remoteAddress,
+          timestamp: new Date(),
+        },
+        notes: authResult.error
+      }).save();
+
+      return res.status(500).json({ 
+        error: `Authentication processing failed: ${authResult.error}` 
+      });
+    }
+
+    // Check if fingerprint matches
+    if (authResult.authenticated) {
+      matchedFingerprint = userFingerprint;
       // Authentication successful
       authResult = 'success';
       await matchedFingerprint.recordUsage();
@@ -209,23 +282,29 @@ app.post('/api/fingerprint/authenticate', async (req, res) => {
         fingerprintId: matchedFingerprint._id,
         authenticationResult: 'success',
         fingerprintData: {
-          fingerPosition,
+          fingerPosition: fingerPosition || matchedFingerprint.fingerPosition,
           processingTime: Date.now() - startTime,
           attempts: 1,
         },
-        deviceInfo,
         location: {
           ipAddress: req.ip || req.connection.remoteAddress,
           timestamp: new Date(),
         },
+        notes: `Match score: ${authResult.score}, Confidence: ${authResult.confidence}`
       }).save();
 
       res.json({
         success: true,
         message: 'Fingerprint authentication successful',
         userId,
-        fingerPosition,
+        fingerPosition: matchedFingerprint.fingerPosition,
         lastUsed: matchedFingerprint.lastUsed,
+        matchDetails: {
+          score: authResult.score,
+          confidence: authResult.confidence,
+          quality: authResult.quality,
+          method: authResult.details?.method || 'biometric_comparison'
+        }
       });
     } else {
       failureReason = 'fingerprint_mismatch';
@@ -233,27 +312,36 @@ app.post('/api/fingerprint/authenticate', async (req, res) => {
       // Log failed attempt
       await new FingerprintLog({
         userId,
-        fingerprintId: null,
+        fingerprintId: userFingerprint._id,
         authenticationResult: 'failure',
         failureReason,
         fingerprintData: {
-          fingerPosition,
+          fingerPosition: fingerPosition || userFingerprint.fingerPosition,
           processingTime: Date.now() - startTime,
           attempts: 1,
         },
-        deviceInfo,
         location: {
           ipAddress: req.ip || req.connection.remoteAddress,
           timestamp: new Date(),
         },
+        notes: `Match score: ${authResult.score}, Confidence: ${authResult.confidence}, Quality: ${authResult.quality}`
       }).save();
 
       res.status(401).json({
         success: false,
         error: 'Fingerprint authentication failed',
+        details: {
+          score: authResult.score,
+          confidence: authResult.confidence,
+          quality: authResult.quality,
+          threshold: 0.7,
+          reason: 'Biometric match score below threshold'
+        }
       });
     }
   } catch (error) {
+    console.error('Fingerprint authentication error:', error);
+    
     // Log error
     if (matchedFingerprint) {
       await new FingerprintLog({
@@ -262,14 +350,9 @@ app.post('/api/fingerprint/authenticate', async (req, res) => {
         authenticationResult: 'failure',
         failureReason: 'device_error',
         fingerprintData: {
-          fingerPosition: req.body.fingerPosition,
+          fingerPosition: req.body.fingerPosition || 'unknown',
           processingTime: Date.now() - startTime,
           attempts: 1,
-        },
-        deviceInfo: {
-          deviceId: req.headers['device-id'] || 'unknown',
-          deviceType: req.headers['device-type'] || 'unknown',
-          userAgent: req.headers['user-agent'] || 'unknown',
         },
         location: {
           ipAddress: req.ip || req.connection.remoteAddress,
@@ -279,7 +362,10 @@ app.post('/api/fingerprint/authenticate', async (req, res) => {
       }).save();
     }
 
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ 
+      error: 'Internal server error during authentication',
+      details: error.message 
+    });
   }
 });
 

@@ -11,7 +11,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import { RootStackParamList } from '../App';
+import { RootStackParamList } from '../navigation/types';
 import { useUser } from '../context/UserContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ProfileScreen'>;

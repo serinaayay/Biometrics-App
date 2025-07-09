@@ -13,7 +13,7 @@ import {
   Alert,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { RootStackParamList } from '../App';
+import { RootStackParamList } from '../navigation/types';
 import { useUser, validatePersonalInfo } from '../context/UserContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
@@ -30,6 +30,7 @@ export default function HomeScreen({ navigation }: Props) {
   const [phoneError, setPhoneError] = useState('');
   const [placeOfBirth, setPlaceOfBirth] = useState(userData.placeOfBirth || '');
   const [nationality, setNationality] = useState(userData.nationality || 'Filipino');
+  const [nationalityError, setNationalityError] = useState('');
   const [temporaryAddress, setTemporaryAddress] = useState(userData.temporaryAddress || '');
   const [permanentAddress, setPermanentAddress] = useState(userData.permanentAddress || '');
 
@@ -90,6 +91,33 @@ export default function HomeScreen({ navigation }: Props) {
     }
   };
 
+  const handleNationality = (text: string) => {
+    const validNationalities = ["Filipino", "Katutubo", "Chinese", "American", "Vietnamese", "Japanese", "Korean", "Thai", "Indonesian", "Malaysian", "Singaporean"];
+    
+    // Case-insensitive validation: check if input matches any valid nationality
+    const isValidNationality = validNationalities.some(nationality => 
+      nationality.toLowerCase() === text.trim().toLowerCase()
+    );
+    
+    // Convert input to proper case for storage if valid, otherwise keep as typed
+    let properCaseText = text.trim();
+    if (isValidNationality) {
+      const matchedNationality = validNationalities.find(nationality => 
+        nationality.toLowerCase() === text.trim().toLowerCase()
+      );
+      properCaseText = matchedNationality || text.trim();
+    }
+    
+    setNationality(properCaseText);
+    
+    // Clear error if text is empty or valid (case-insensitive)
+    if (text.trim() === '' || isValidNationality) {
+      setNationalityError('');
+    } else {
+      setNationalityError('Please input a valid nationality');
+    }
+  };
+
   // Get selected gender
   const getSelectedGender = (): 'Male' | 'Female' | 'Prefer not to say' | '' => {
     if (isMale) return 'Male';
@@ -109,11 +137,20 @@ export default function HomeScreen({ navigation }: Props) {
 
   // Handle next button press
   const handleNext = () => {
-    // Check for phone number validation error first
+    // Check for validation errors first
     if (phoneError) {
       Alert.alert(
         'Validation Error',
         'Please fix the contact number format before proceeding.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+
+    if (nationalityError) {
+      Alert.alert(
+        'Validation Error',
+        'Please fix the nationality before proceeding.',
         [{ text: 'OK' }]
       );
       return;
@@ -294,10 +331,15 @@ export default function HomeScreen({ navigation }: Props) {
             <TextInput
               placeholder="Ex: Filipino"
               placeholderTextColor="#9E9A9A"
-              style={styles.inputFields}
+              style={[styles.inputFields, nationalityError ? { borderColor: '#DD3737', borderWidth: 2 } : {}]}
               value={nationality}
-              onChangeText={setNationality}
+              onChangeText={handleNationality}
             />
+            {nationalityError ? (
+              <Text style={{ color: '#DD3737', fontSize: 14, marginLeft: 20, marginTop: 5 }}>
+                {nationalityError}
+              </Text>
+            ) : null}
 
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 20 }}>
               Marital Status
@@ -406,13 +448,18 @@ export default function HomeScreen({ navigation }: Props) {
               <Text style={{ color: '#DD3737' }}> *</Text>
             </Text>
             <TextInput
-              placeholder="Example: 093"
+              placeholder="Example: 09310228903"
               placeholderTextColor="#9E9A9A"
               style={[styles.inputFields, phoneError ? { borderColor: '#DD3737', borderWidth: 2 } : {}]}
               value={phoneNumber}
               onChangeText={handlePhoneNumberChange}
               keyboardType="phone-pad"
             />
+            {phoneError ? (
+              <Text style={{ color: '#DD3737', fontSize: 14, marginLeft: 20, marginTop: 5 }}>
+                {phoneError}
+              </Text>
+            ) : null}
           </View>
         </View>
 

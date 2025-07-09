@@ -1,11 +1,16 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-// Define your navigation stack parameters (matching App.tsx)
+// Define the navigation stack parameters
 export type RootStackParamList = {
   LogIn: undefined;
+  Password: undefined;
   SignUp: undefined;
   SignUp2: undefined;
+  Fingerprint: undefined;
   ProfileScreen: undefined;
+  Verify: undefined;
+  Verify2: undefined;
+  InfoRegister: undefined;
   FingerprintAuth?: {
     userId?: string;
     returnTo?: keyof RootStackParamList;
@@ -17,9 +22,15 @@ export type RootStackParamList = {
 
 // Create typed props for each screen
 export type LoginScreenProps = NativeStackScreenProps<RootStackParamList, 'LogIn'>;
+export type PasswordScreenProps = NativeStackScreenProps<RootStackParamList, 'Password'>;
 export type SignUpScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
 export type SignUp2ScreenProps = NativeStackScreenProps<RootStackParamList, 'SignUp2'>;
+export type FingerprintScreenProps = NativeStackScreenProps<RootStackParamList, 'Fingerprint'>;
+export type VerifyScreenProps = NativeStackScreenProps<RootStackParamList, 'Verify'>;
+export type Verify2ScreenProps = NativeStackScreenProps<RootStackParamList, 'Verify2'>;
+export type InfoRegisterScreenProps = NativeStackScreenProps<RootStackParamList, 'InfoRegister'>;
 export type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, 'ProfileScreen'>;
+
 export type FingerprintAuthScreenProps = NativeStackScreenProps<
   RootStackParamList,
   'FingerprintAuth'
