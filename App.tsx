@@ -2,14 +2,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { UserProvider } from './context/UserContext';
 import { RootStackParamList } from './navigation/types';
+import Fingerprint from './screens/Fingerprint';
+import InfoRegister from './screens/InfoRegister';
 import LogIn from './screens/Login';
 import ProfileScreen from './screens/ProfileScreen';
 import SignUp from './screens/SignUp';
 import SignUp2 from './screens/SignUp2';
-import Fingerprint from './screens/Fingerprint';
 import Verify from './screens/Verify';
 import Verify2 from './screens/Verify2';
-import InfoRegister from './screens/InfoRegister';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
