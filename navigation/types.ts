@@ -12,6 +12,7 @@ export type RootStackParamList = {
   Verify2: undefined;
   InfoRegister: undefined;
   Submission: undefined;
+  Submit: undefined;
   FingerprintAuth?: {
     userId?: string;
     returnTo?: keyof RootStackParamList;

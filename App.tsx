@@ -10,6 +10,7 @@ import SignUp from './screens/SignUp';
 import SignUp2 from './screens/SignUp2';
 import Verify from './screens/Verify';
 import Verify2 from './screens/Verify2';
+import Submit from './screens/Submit';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -25,6 +26,7 @@ export default function App() {
           <Stack.Screen name="Verify" component={Verify} />
           <Stack.Screen name="Verify2" component={Verify2} />
           <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+          <Stack.Screen name="Submit" component={Submit} />
           <Stack.Screen name="InfoRegister" component={InfoRegister} />
         </Stack.Navigator>
       </NavigationContainer>
