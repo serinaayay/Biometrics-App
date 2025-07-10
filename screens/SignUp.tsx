@@ -13,8 +13,8 @@ import {
   View,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { RootStackParamList } from '../navigation/types';
 import { useUser, validatePersonalInfo } from '../context/UserContext';
+import { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignUp'>;
 
@@ -258,7 +258,7 @@ export default function HomeScreen({ navigation }: Props) {
                   marginTop: height * 0.02,
                   borderRadius: width * 1.0,
                   width: width * 0.05,
-                  height: height * 0.03,
+                  height: height * 0.02,
                   flexDirection: 'row',
                 }}
               />
@@ -275,7 +275,7 @@ export default function HomeScreen({ navigation }: Props) {
                   marginTop: height * 0.02,
                   borderRadius: width * 1.0,
                   width: width * 0.05,
-                  height: height * 0.03,
+                  height: height * 0.02,
                   flexDirection: 'row',
                 }}
               />
@@ -292,12 +292,12 @@ export default function HomeScreen({ navigation }: Props) {
                   marginTop: height * 0.02,
                   borderRadius: width * 1.0,
                   width: width * 0.05,
-                  height: height * 0.03,
+                  height: height * 0.02,
                   flexDirection: 'row',
                 }}
               />
               <Text style={{ fontSize: 15, fontWeight: 'bold', marginTop: 10, marginLeft: 9 }}>
-                Prefer not {'\n'} to say
+                Prefer not{'\n'}to say
               </Text>
             </View>
 
