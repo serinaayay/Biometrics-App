@@ -93,7 +93,7 @@ export default function HomeScreen({ navigation }: Props) {
   };
 
   const handleNationality = (text: string) => {
-    const validNationalities = ["Filipino", "Katutubo", "Chinese", "American", "Vietnamese", "Japanese", "Korean", "Thai", "Indonesian", "Malaysian", "Singaporean"];
+    const validNationalities = ["Filipino", "Chinese", "American", "Vietnamese", "Japanese", "Korean", "Thai", "Indonesian", "Malaysian", "Singaporean"];
     
     // Case-insensitive validation: check if input matches any valid nationality
     const isValidNationality = validNationalities.some(nationality => 

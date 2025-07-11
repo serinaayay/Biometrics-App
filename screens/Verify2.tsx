@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { useUser } from '../context/UserContext';
 import { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Verify2'>;
@@ -8,9 +9,16 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Verify2'>;
 const { width, height } = Dimensions.get('window');
 const options = ['Elementary', 'High School', 'Undergraduate/College', 'Vocational '];
 
+const jobChoice = ['Finance/Banking', 'Accounting', 'Admin/Office Support', 'Consulting/Strategy', 'Design/Architecture', 'Education/Training', 
+  'Engineering/Manufacturing', 'Healthcare/Medical', 'Hospitality/Travel', 'Human Resources', 'Government/Public Sector', 'Information Technology',
+  'Legal/Compliance', 'Marketing/Advertising', 'Media/Entertainment', 'Non-Profit/NGO', 'Real Estate/Property Management', 'Retail/Sales',
+  'Science/Research', 'Sports/Fitness', 'Telecommunications', 'Transportation/Logistics','Mining/Resources', 
+  'Agriculture/Farming', 'Construction/Trades', 'Self Employed/Freelance', 'Call Center/Customer Service'];
+
 export default function HomeScreen({ navigation }: Props){
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const { userData, resetUserData } = useUser();
 
 
   // for handling user input skills
@@ -61,25 +69,25 @@ export default function HomeScreen({ navigation }: Props){
       </View>
 
 
-        <Text style={{ fontSize: 23, fontWeight: 'bold', color: '#000000', marginTop: 350, marginLeft: 20 }}>Educational Background</Text>
+        <Text style={{ fontSize: 23, fontWeight: 'bold', color: '#000000', marginTop: width * 1, marginLeft: 20 }}>Educational Background</Text>
         <View style={styles.fieldContainer}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 1, marginLeft: 10 }}>Education Attainment</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 1, marginLeft: 10 }}>Educational Attainment</Text>
             <TextInput
-              placeholder="Highschool"
+              placeholder={userData.educationalAttainment || 'Educational Attainment not provided'}
               placeholderTextColor="#093FB4"
               editable={false}
               style={styles.inputFields}/>
 
             <Text style={styles.topics}>Degree</Text>
             <TextInput
-              placeholder="..."
+              placeholder={userData.degree || 'Degree not provided'}
               placeholderTextColor="#093FB4"
               editable={false}
               style={styles.inputFields}/>
 
-            <Text style={styles.topics}>Collage/University</Text>
+            <Text style={styles.topics}>College/University</Text>
             <TextInput
-              placeholder="..."
+              placeholder={userData.university || 'College/University not provided'}
               placeholderTextColor="#093FB4"
               editable={false}
               style={styles.inputFields}/>
@@ -89,19 +97,10 @@ export default function HomeScreen({ navigation }: Props){
               <View style={styles.fieldContainer}>
               <Text style={styles.topics}>Current Job</Text>
               <TextInput
-               placeholder="..."
+               placeholder={userData.currentJob }
                placeholderTextColor="#093FB4"
                editable={false}
                style={styles.inputFields}/>
-
-               <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.8, marginTop: 20,  marginLeft: 20}}>
-                <Text style={{marginTop:10}}>Others</Text>
-                <TextInput
-               placeholder="Software Developer"
-               placeholderTextColor="#093FB4"
-               editable={false}
-               style={styles.jobField}/>
-               </View>
 
                <Text style={styles.topics}>Skills</Text>
                <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.8, marginTop: 20,  marginLeft: 20}}>

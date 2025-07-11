@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import Checkbox from 'expo-checkbox';
 import { useState } from 'react';
 import {
   Alert,
@@ -10,13 +11,20 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { RootStackParamList } from '../navigation/types';
 import { useUser, validateEducationalInfo, validateEmploymentInfo } from '../context/UserContext';
+import { RootStackParamList } from '../navigation/types';
+
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignUp2'>;
 
 const { width, height } = Dimensions.get('window');
 const options = ['Elementary', 'High School', 'Senior High School', 'Bachelor\'s Degree', 'Master\'s Degree', 'Doctorate'];
+
+const jobChoice = ['Finance/Banking', 'Accounting', 'Admin/Office Support', 'Consulting/Strategy', 'Design/Architecture', 'Education/Training', 
+  'Engineering/Manufacturing', 'Healthcare/Medical', 'Hospitality/Travel', 'Human Resources', 'Government/Public Sector', 'Information Technology',
+  'Legal/Compliance', 'Marketing/Advertising', 'Media/Entertainment', 'Non-Profit/NGO', 'Real Estate/Property Management', 'Retail/Sales',
+  'Science/Research', 'Sports/Fitness', 'Telecommunications', 'Transportation/Logistics','Mining/Resources', 
+  'Agriculture/Farming', 'Construction/Trades', 'Self Employed/Freelance', 'Call Center/Customer Service'];
 
 export default function HomeScreen({ navigation }: Props) {
   const { userData, updateUserData } = useUser();
@@ -25,7 +33,13 @@ export default function HomeScreen({ navigation }: Props) {
   const [selectedOption, setSelectedOption] = useState<string | null>(
     userData.educationalAttainment || null
   );
+
+  const [selectedJobChoice, setSelectedJob] = useState<string | null>(null);
+
+
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [isjobDropdown, setJobDropdown] = useState(false);
+  const [isOther, setIsOther] = useState(userData.currentJob === 'Others' || false );
   const [degree, setDegree] = useState(userData.degree || '');
   const [university, setUniversity] = useState(userData.university || '');
   const [currentJob, setCurrentJob] = useState(userData.currentJob || '');
@@ -122,10 +136,11 @@ export default function HomeScreen({ navigation }: Props) {
       educationalAttainment: selectedOption || '',
       degree: degree.trim(),
       university: university.trim(),
-      currentJob: currentJob.trim(),
+      currentJob: selectedOption || '', // Use selectedOption2 for currentJob,
       skills: skills,
       workExperience: workExperience.trim(),
       sssNumber: sssNumber.trim(),
+      otherJob: selectedJobChoice || '',
       isVerified: true, // Mark as verified when completing signup
     };
 
@@ -160,13 +175,16 @@ export default function HomeScreen({ navigation }: Props) {
       temporaryAddress: userData.temporaryAddress || '',
       permanentAddress: userData.permanentAddress,
       
+      
       // Educational information
       educationalAttainment: selectedOption || '',
       degree: degree.trim(),
       university: university.trim(),
       
       // Employment information  
-      currentJobTitle: currentJob.trim(), // Note: model expects currentJobTitle, not currentJob
+      currentJobTitle: selectedOption || '', // Note: model expects currentJobTitle, not currentJob// Store 'Others' if selected
+      otherJob: String,
+      finalJob: selectedOption === 'Others' ? currentJob : selectedJobChoice,
       skills: skills,
       workExperience: workExperience.trim() ? parseInt(workExperience.trim()) || 0 : 0, // Convert to number
       sssNumber: sssNumber.trim(),
@@ -269,7 +287,15 @@ export default function HomeScreen({ navigation }: Props) {
             </Pressable>
 
             {isDropdownVisible && (
-              <View style={styles.dropdownList}>
+              <View style={{ 
+                  maxHeight: 200,
+                  backgroundColor: '#fff', 
+                  borderWidth: 1, 
+                  borderColor: '#ccc', 
+                  borderRadius: 5,
+                  marginTop: 5,
+                  overflow: 'hidden',
+                }}>
                 {options.map((option, index) => (
                   <Pressable
                     key={index}
@@ -292,8 +318,7 @@ export default function HomeScreen({ navigation }: Props) {
               placeholderTextColor="#9E9A9A"
               style={styles.inputFields}
               value={degree}
-              onChangeText={setDegree}
-            />
+              onChangeText={setDegree}/>
 
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 10 }}>
               College/University
@@ -320,16 +345,68 @@ export default function HomeScreen({ navigation }: Props) {
         </Text>
         <View style={styles.fieldContainer2}>
           <View>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, marginLeft: 10 }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 5, marginLeft: 10 }}>
               Current Job
+              <Text style={{ color: '#DD3737' }}> *</Text>
             </Text>
-            <TextInput
-              placeholder="'N/A' If not applicable"
-              placeholderTextColor="#9E9A9A"
-              style={styles.inputFields}
-              value={currentJob}
-              onChangeText={setCurrentJob}
-            />
+            <Pressable
+              onPress={() => setJobDropdown(!isjobDropdown)}
+              style={styles.dropdownButton}>
+              <Text style={{ marginRight: 20 }}>
+                {selectedJobChoice || 'Select your current job'}
+                <Text style={{ marginLeft: 200 }}> ▼ </Text>
+              </Text>
+            </Pressable>
+
+            {isjobDropdown && (
+              <View style={{ 
+                  maxHeight: 200,
+                  backgroundColor: '#fff', 
+                  borderWidth: 1, 
+                  borderColor: '#ccc', 
+                  borderRadius: 5,
+                  marginTop: 5,
+                  overflow: 'hidden',
+                }}>
+                {jobChoice.map((option2, index) => (
+                  <Pressable
+                    key={index}
+                    onPress={() => {
+                      setSelectedJob(option2);
+                      setJobDropdown(false);
+                    }}
+                    style={styles.dropdownItem}>
+                    <Text>{option2}</Text>
+                  </Pressable>
+                ))}
+              </View>
+            )}
+
+          <View style={{ flexDirection: 'row', marginTop: height * 0.0001, marginBottom: height * 0.01, marginLeft: 10}}>
+            <Checkbox
+                value={isOther}
+                onValueChange={(newValue) => {
+                setIsOther(newValue);
+                if (newValue) {
+                  setSelectedJob('Others');
+                  setCurrentJob('Others');
+                } else {
+                  setSelectedJob(selectedJobChoice);
+                  setCurrentJob('');
+                }
+              }}
+                color={isOther ? '#4B70E0' : undefined}
+                style={{
+                  paddingTop: height * 0.02,
+                  marginLeft: 10,
+                  marginTop: height * 0.02,
+                  borderRadius: width * 1.0,
+                  width: width * 0.05,
+                  height: height * 0.02,
+                  flexDirection: 'row',
+              }}/>
+              <Text style={{ fontSize: 15, fontWeight: 'bold', marginTop: 15, marginLeft: 9,}}>Others</Text>
+          </View>
 
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, marginLeft: 10 }}>
               Skills

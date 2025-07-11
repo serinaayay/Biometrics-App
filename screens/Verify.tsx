@@ -1,7 +1,8 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import Checkbox from 'expo-checkbox';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { useUser } from '../context/UserContext';
 import { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Verify'>;
@@ -13,16 +14,38 @@ export default function HomeScreen({ navigation }: Props){
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
 
-  //Checkbox
-  const [isMale, setChecked1] = useState(true);
-  const [isFemale, setChecked2] = useState(false);
-  const [isPreferNotToSay, setChecked3] = useState(false);
+  const { userData, resetUserData } = useUser();
 
-  const [isSingle, setChecked4] = useState(true);
-  const [isMarried, setChecked5] = useState(false);
-  const [isDivorced, setChecked6] = useState(false);
-  const [isWidowed, setChecked7] = useState(false);
-  
+  //Checkbox
+  const [isMale, setChecked1] = useState(userData.gender === 'Male');
+  const [isFemale, setChecked2] = useState(userData.gender === 'Female');
+  const [isPreferNotToSay, setChecked3] = useState(userData.gender === 'Prefer not to say');
+
+  const [isSingle, setChecked4] = useState(userData.maritalStatus === 'Single');
+  const [isMarried, setChecked5] = useState(userData.maritalStatus === 'Married');
+  const [isDivorced, setChecked6] = useState(userData.maritalStatus === 'Divorced');
+  const [isWidowed, setChecked7] = useState(userData.maritalStatus === 'Widowed');
+
+  //derives from user input  || gender
+  useEffect(() => {
+    setChecked1 (userData.gender === 'Male');
+    setChecked2 (userData.gender === 'Female');
+    setChecked3 (userData.gender === 'Prefer not to say');
+
+    setChecked4 (userData.maritalStatus === 'Single');
+    setChecked5 (userData.maritalStatus === 'Married');
+    setChecked6 (userData.maritalStatus === 'Divorced');
+    setChecked7 (userData.maritalStatus === 'Widowed');
+
+  }, [userData]);
+
+  // Function to handle option selection
+  const handleOptionSelect = (option: string) => {
+    setSelectedOption(option);
+    setDropdownVisible(false);
+  };
+
+
 
   // for handling user input skills
   const [skills, setSkills] = useState<string[]>([]);
@@ -41,6 +64,7 @@ export default function HomeScreen({ navigation }: Props){
     newSkills.splice(index, 1);
     setSkills(newSkills);
   };
+
 
   return (
     <View style={{flex:1, backgroundColor: "#FFFFFF"}}>
@@ -72,14 +96,15 @@ export default function HomeScreen({ navigation }: Props){
       </View>
 
 
-        <Text style={{ fontSize: 23, fontWeight: 'bold', color: '#000000', marginTop: 350, marginLeft: 20 }}>Personal Information</Text>
+        <Text style={{ fontSize: 23, fontWeight: 'bold', color: '#000000', marginTop: width * 1, marginLeft: 20 }}>Personal Information</Text>
         <View style={styles.fieldContainer}>
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 1, marginLeft: 10 }}>Full Name</Text>
             <TextInput
-              placeholder="Juanlito Sanlito  Miguelito P. Santiago"
+              placeholder={(userData.fullName)}
               placeholderTextColor="#093FB4"
               editable={false}
-              style={styles.inputFields}/>
+              style={styles.inputFields}>
+              </TextInput>
 
             <Text style={styles.topics}>Gender</Text>
                 <View style={{ flexDirection: 'row', marginTop: height * 0.02, marginLeft: 25}}>
@@ -92,10 +117,10 @@ export default function HomeScreen({ navigation }: Props){
                                 marginTop: height * 0.02,
                                 borderRadius: width * 1.0,
                                 width: width * 0.05,
-                                height: height * 0.03,
+                                height: height * 0.02,
                                 flexDirection: 'row', 
                               }}
-                            />
+                              />
                             <Text style={{ fontSize: 15, color: '#093FB4', fontWeight: 'bold', marginTop: 15, marginLeft: 9 }}>
                               Male
                             </Text>
@@ -109,7 +134,7 @@ export default function HomeScreen({ navigation }: Props){
                                 marginTop: height * 0.02,
                                 borderRadius: width * 1.0,
                                 width: width * 0.05,
-                                height: height * 0.03,
+                                height: height * 0.02,
                                 flexDirection: 'row',
                               }}
                             />
@@ -126,7 +151,7 @@ export default function HomeScreen({ navigation }: Props){
                                 marginTop: height * 0.02,
                                 borderRadius: width * 1.0,
                                 width: width * 0.05,
-                                height: height * 0.03,
+                                height: height * 0.02,
                                 flexDirection: 'row',
                               }}
                             />
@@ -136,21 +161,22 @@ export default function HomeScreen({ navigation }: Props){
                 </View>
             <Text style={styles.topics}>Date of Birth</Text>
             <TextInput
-              placeholder="01/01/2000"
+              placeholder={userData.dateOfBirth ? userData.dateOfBirth.toLocaleDateString() : 'MM/DD/YYYY'}
               placeholderTextColor="#093FB4"
               editable={false}
-              style={styles.inputFields}/>
+              style={styles.inputFields}>
+              </TextInput>
 
             <Text style={styles.topics}>Place of Birth</Text>
             <TextInput
-              placeholder="Manila"
+              placeholder={userData.placeOfBirth || 'Place of Birth not provided'}
               placeholderTextColor="#093FB4"
               editable={false}
               style={styles.inputFields}/>
 
             <Text style={styles.topics}>Nationality</Text>
             <TextInput
-              placeholder="Filipino"
+              placeholder={userData.nationality || 'Nationality not provided'}
               placeholderTextColor="#093FB4"
               editable={false}
               style={styles.inputFields}/>
@@ -169,7 +195,7 @@ export default function HomeScreen({ navigation }: Props){
                             height: height * 0.03,
                           }}
                         />
-                        <Text style={{ fontSize: 15, fontWeight: 'bold', marginLeft: 9, color:'#093FB4' }}>Single</Text>
+                        <Text style={{ fontSize: 15, fontWeight: 'bold', marginLeft: 9, color:'#9A9A9A' }}>Single</Text>
                       </View>
             
                       <View style={{ flexDirection: 'row', width: '50%' }}>
@@ -220,28 +246,28 @@ export default function HomeScreen({ navigation }: Props){
 
             <Text style={styles.topics}>Temporary Address</Text>
             <TextInput
-              placeholder="..."
+              placeholder={userData.temporaryAddress || 'Temporary Address not provided'}
               placeholderTextColor="#093FB4"
               editable={false}
               style={styles.inputFields}/>
 
             <Text style={styles.topics}>Permanent Address</Text>
             <TextInput
-              placeholder="Blk 9 Lot 10, Brgy. Sanlito, Santiago City"
+              placeholder={userData.permanentAddress || 'Permanent Address not provided'}
               placeholderTextColor="#093FB4"
               editable={false}
               style={styles.inputFields}/>
 
             <Text style={styles.topics}>Email Address</Text>
             <TextInput
-              placeholder="example20@gmail.com"
+              placeholder={userData.email || 'Email not provided'}
               placeholderTextColor="#093FB4"
               editable={false}
               style={styles.inputFields}/>
 
-            <Text style={styles.topics}>Contract Number</Text>
+            <Text style={styles.topics}>Contact Number</Text>
             <TextInput
-              placeholder="09912609986"
+              placeholder={userData.phoneNumber || 'Contact Number not provided'}
               placeholderTextColor="#093FB4"
               editable={false}
               style={styles.inputFields}/>
@@ -427,6 +453,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: height * 0.07,
     marginTop: 10
-    
   },
+  avatarText: {
+      fontSize: width * 0.04,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      color: '#093FB4',
+    },
 });
