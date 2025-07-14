@@ -93,7 +93,7 @@ export default function HomeScreen({ navigation }: Props) {
   };
 
   const handleNationality = (text: string) => {
-    const validNationalities = ["Filipino", "Katutubo", "Chinese", "American", "Vietnamese", "Japanese", "Korean", "Thai", "Indonesian", "Malaysian", "Singaporean"];
+    const validNationalities = ["Filipino", "Chinese", "American", "Vietnamese", "Japanese", "Korean", "Thai", "Indonesian", "Malaysian", "Singaporean"];
     
     // Case-insensitive validation: check if input matches any valid nationality
     const isValidNationality = validNationalities.some(nationality => 
@@ -190,13 +190,35 @@ export default function HomeScreen({ navigation }: Props) {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-        <View style={styles.signUpContainer}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>
-            Sign Up
-          </Text>
+    <View style={{flex:1, backgroundColor: "#FFFFFF"}}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+      <View style={styles.signUpContainer}>
+      <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>Sign Up</Text>
+
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 14}}>
+        <View style={styles.navNow}>
+          <View style={styles.navNow2}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF' }}>1</Text>
+          </View>
         </View>
+        <View style={styles.separator} />
+        <View style={styles.navNot}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>2</Text>
+        </View>
+        <View style={styles.separator} />
+        <View style={styles.navNot}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>3</Text>
+        </View>
+      </View>
+
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.68, marginTop: 5, alignSelf: 'center'}}>
+        <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center'}}>Sign Up</Text>
+        <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center', marginLeft: 60}}>Verification</Text>
+        <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center', marginLeft: 45 }}>Submission</Text>
+      </View>
+    </View>
+
+        
 
         <Text
           style={{
@@ -485,6 +507,46 @@ export default function HomeScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
+  navNow:{
+    backgroundColor: '#093FB4',
+    borderColor: '#FFFFFF',
+    borderWidth: 1,
+    borderRadius: 100,
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navNow2:{
+    backgroundColor: '#093FB4',
+    borderColor: '#FFFFFF',
+    borderWidth: 2,
+    borderRadius: 100,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navNot:{
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
+    borderWidth: 2,
+    borderRadius: 100,
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  separator: {
+        marginVertical: 23,
+        borderBottomColor: '#FFFFFF',
+        //borderBottomWidth: StyleSheet.hairlineWidth,
+        //marginLeft: 15,
+        //marginRight: 15,
+        borderWidth: 2,
+        borderColor: '#FFFFFF',
+        width: width * 0.15,
+  },
   signUpContainer: {
     bottom: -height * 0.45,
     width: width * 0.9,

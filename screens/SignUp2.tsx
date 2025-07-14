@@ -12,11 +12,17 @@ import {
 } from 'react-native';
 import { RootStackParamList } from '../navigation/types';
 import { useUser, validateEducationalInfo, validateEmploymentInfo } from '../context/UserContext';
+import Checkbox from 'expo-checkbox';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignUp2'>;
 
 const { width, height } = Dimensions.get('window');
-const options = ['Elementary', 'High School', 'Senior High School', 'Bachelor\'s Degree', 'Master\'s Degree', 'Doctorate'];
+const options = ['Elementary', 'High School', 'Senior High School', 'Bachelor\'s Degree', 'Master\'s Degree', 'Doctorate','Vocational'];
+const jobChoice = ['Finance/Banking', 'Accounting', 'Admin/Office Support', 'Consulting/Strategy', 'Design/Architecture', 'Education/Training', 
+  'Engineering/Manufacturing', 'Healthcare/Medical', 'Hospitality/Travel', 'Human Resources', 'Government/Public Sector', 'Information Technology',
+  'Legal/Compliance', 'Marketing/Advertising', 'Media/Entertainment', 'Non-Profit/NGO', 'Real Estate/Property Management', 'Retail/Sales',
+  'Science/Research', 'Sports/Fitness', 'Telecommunications', 'Transportation/Logistics','Mining/Resources', 
+  'Agriculture/Farming', 'Construction/Trades', 'Self Employed/Freelance', 'Call Center/Customer Service'];
 
 export default function HomeScreen({ navigation }: Props) {
   const { userData, updateUserData } = useUser();
@@ -26,8 +32,11 @@ export default function HomeScreen({ navigation }: Props) {
     userData.educationalAttainment || null
   );
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const [isjobDropdown, setJobDropdown] = useState(false);
+  const [isOther, setIsOther] = useState(userData.currentJob === 'Others' || false );
   const [degree, setDegree] = useState(userData.degree || '');
   const [university, setUniversity] = useState(userData.university || '');
+  const [selectedJobChoice, setSelectedJob] = useState<string | null>(null);
   const [currentJob, setCurrentJob] = useState(userData.currentJob || '');
   const [workExperience, setWorkExperience] = useState(userData.workExperience || '');
   const [sssNumber, setSssNumber] = useState(userData.sssNumber || '');
@@ -72,6 +81,7 @@ export default function HomeScreen({ navigation }: Props) {
 
       setSssNumber(formatted);
 
+
       if (sliced.length === 10) {
           setSssNumberError('');
       } else {
@@ -86,7 +96,7 @@ export default function HomeScreen({ navigation }: Props) {
       const API_BASE_URL = 'http://192.168.68.146:5001';
       
       console.log('Attempting to save user to database at:', API_BASE_URL);
-      console.log('User data:', JSON.stringify(completeUserData, null, 2));
+      console.log('User data:', JSON.stringify(completeUserData));
       
       const response = await fetch(`${API_BASE_URL}/api/users`, {
         method: 'POST',
@@ -96,20 +106,16 @@ export default function HomeScreen({ navigation }: Props) {
         body: JSON.stringify(completeUserData),
       });
 
+      console.log('Request:', response.formData);
+
       console.log('Response status:', response.status);
       console.log('Response headers:', response.headers);
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Server error response:', errorData);
-        throw new Error(errorData.error || `Failed to save user data (Status: ${response.status})`);
-      }
 
       const savedUser = await response.json();
-      console.log('✅ User saved to database successfully:', savedUser);
+      console.log('User saved to database successfully:', savedUser);
       return savedUser;
     } catch (error) {
-      console.error('❌ Error saving user to database:', error);
+      console.error('Error saving user to database:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       console.error('Error details:', errorMessage);
       throw error;
@@ -122,7 +128,8 @@ export default function HomeScreen({ navigation }: Props) {
       educationalAttainment: selectedOption || '',
       degree: degree.trim(),
       university: university.trim(),
-      currentJob: currentJob.trim(),
+      currentJob: selectedOption || '', // Use selectedOption2 for currentJob,
+      otherJob: selectedJobChoice || '',
       skills: skills,
       workExperience: workExperience.trim(),
       sssNumber: sssNumber.trim(),
@@ -148,36 +155,29 @@ export default function HomeScreen({ navigation }: Props) {
 
     // Prepare complete user data for database
     const completeUserData = {
-      // Use fullName directly
-      fullName: userData.fullName || '',
+      fullName: userData.fullName, 
       email: userData.email,
-      phoneNumber: userData.phoneNumber,
+      phoneNumber: userData.phoneNumber, 
       gender: userData.gender,
       dateOfBirth: userData.dateOfBirth,
       placeOfBirth: userData.placeOfBirth || '',
       nationality: userData.nationality || 'Filipino',
-      maritalStatus: userData.maritalStatus,
+      maritalStatus: userData.maritalStatus || 'Single',
       temporaryAddress: userData.temporaryAddress || '',
       permanentAddress: userData.permanentAddress,
       
       // Educational information
-      educationalAttainment: selectedOption || '',
-      degree: degree.trim(),
-      university: university.trim(),
+      educationalAttainment: selectedOption,
+      degree: degree.trim() || '', 
+      college: university.trim() || '', 
       
       // Employment information  
-      currentJobTitle: currentJob.trim(), // Note: model expects currentJobTitle, not currentJob
-      skills: skills,
-      workExperience: workExperience.trim() ? parseInt(workExperience.trim()) || 0 : 0, // Convert to number
+      currentJobTitle: selectedOption || '', // Note: model expects currentJobTitle, not currentJob// Store 'Others' if selected
+      otherJob: String,
+      finalJob: selectedOption === 'Others' ? currentJob : selectedJobChoice,
+      workExperience: workExperience.trim() || '',
       sssNumber: sssNumber.trim(),
-      
-      // Account status
-      isVerified: true,
-      isActive: true,
-      fingerprintEnabled: false, // Will be enabled when fingerprint is registered
-      
-      // Temporary fix for database constraint
-      fingerprintId: Date.now().toString(), // Use timestamp as unique ID
+      skills: skills,
     };
 
     try {
@@ -189,8 +189,8 @@ export default function HomeScreen({ navigation }: Props) {
         `Welcome ${userData.fullName}! Your profile has been created successfully and saved to the database.`,
         [
           {
-            text: 'Continue',
-            onPress: () => navigation.navigate('ProfileScreen'),
+            text: 'Continue to Verification',
+            onPress: () => navigation.navigate('Verify'),
           },
         ]
       );
@@ -201,7 +201,7 @@ export default function HomeScreen({ navigation }: Props) {
         `Your profile was created locally, but there was an error saving to the database: ${errorMessage}. Please check your internet connection and try again.`,
         [
           {
-            text: 'Continue Offline',
+            text: 'Continue to Verification',
             onPress: () => navigation.navigate('Verify'),
           },
           {
@@ -215,13 +215,33 @@ export default function HomeScreen({ navigation }: Props) {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-        <View style={styles.signUpContainer}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>
-            Sign Up
-          </Text>
+    <View style={{flex:1, backgroundColor: "#FFFFFF"}}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+      <View style={styles.signUpContainer}>
+      <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>Sign Up</Text>
+
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 14}}>
+        <View style={styles.navNow}>
+          <View style={styles.navNow2}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF' }}>1</Text>
+          </View>
         </View>
+        <View style={styles.separator} />
+        <View style={styles.navNot}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>2</Text>
+        </View>
+        <View style={styles.separator} />
+        <View style={styles.navNot}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>3</Text>
+        </View>
+      </View>
+
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.68, marginTop: 5, alignSelf: 'center'}}>
+        <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center'}}>Sign Up</Text>
+        <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center', marginLeft: 60}}>Verification</Text>
+        <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center', marginLeft: 45 }}>Submission</Text>
+      </View>
+    </View>
 
         <Text
           style={{
@@ -249,7 +269,15 @@ export default function HomeScreen({ navigation }: Props) {
             </Pressable>
 
             {isDropdownVisible && (
-              <View style={styles.dropdownList}>
+              <View style={{ 
+                maxHeight: 200,
+                backgroundColor: '#fff', 
+                borderWidth: 1, 
+                borderColor: '#ccc', 
+                borderRadius: 5,
+                marginTop: 5,
+                overflow: 'hidden',
+              }}>
                 {options.map((option, index) => (
                   <Pressable
                     key={index}
@@ -302,18 +330,71 @@ export default function HomeScreen({ navigation }: Props) {
           <View>
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, marginLeft: 10 }}>
               Current Job
+              <Text style={{ color: '#DD3737' }}> *</Text>
             </Text>
-            <TextInput
-              placeholder="'N/A' If not applicable"
-              placeholderTextColor="#9E9A9A"
-              style={styles.inputFields}
-              value={currentJob}
-              onChangeText={setCurrentJob}
-            />
+            
 
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, marginLeft: 10 }}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 5, marginLeft: 10 }}>
               Skills
             </Text>
+            <Pressable
+              onPress={() => setJobDropdown(!isjobDropdown)}
+              style={styles.dropdownButton}>
+              <Text style={{ marginRight: 20 }}>
+                {selectedJobChoice || 'Select your current job'}
+                <Text style={{ marginLeft: 200 }}> ▼ </Text>
+              </Text>
+            </Pressable>
+
+            {isjobDropdown && (
+              <View style={{ 
+                  maxHeight: 200,
+                  backgroundColor: '#fff', 
+                  borderWidth: 1, 
+                  borderColor: '#ccc', 
+                  borderRadius: 5,
+                  marginTop: 5,
+                  overflow: 'hidden',
+                }}>
+                {jobChoice.map((option2, index) => (
+                  <Pressable
+                    key={index}
+                    onPress={() => {
+                      setSelectedJob(option2);
+                      setJobDropdown(false);
+                    }}
+                    style={styles.dropdownItem}>
+                    <Text>{option2}</Text>
+                  </Pressable>
+                ))}
+              </View>
+            )}
+
+          <View style={{ flexDirection: 'row', marginTop: height * 0.0001, marginBottom: height * 0.01, marginLeft: 10}}>
+            <Checkbox
+                value={isOther}
+                onValueChange={(newValue) => {
+                setIsOther(newValue);
+                if (newValue) {
+                  setSelectedJob('Others');
+                  setCurrentJob('Others');
+                } else {
+                  setSelectedJob(selectedJobChoice);
+                  setCurrentJob('');
+                }
+              }}
+                color={isOther ? '#4B70E0' : undefined}
+                style={{
+                  paddingTop: height * 0.02,
+                  marginLeft: 10,
+                  marginTop: height * 0.02,
+                  borderRadius: width * 1.0,
+                  width: width * 0.05,
+                  height: height * 0.02,
+                  flexDirection: 'row',
+              }}/>
+              <Text style={{ fontSize: 15, fontWeight: 'bold', marginTop: 15, marginLeft: 9,}}>Others</Text>
+          </View>
 
             <TextInput
               value={inputSkill}
@@ -417,12 +498,14 @@ export default function HomeScreen({ navigation }: Props) {
           <Pressable onPress={handleVerify}>
             <View style={styles.nextButton}>
               <Text
+                onPress={() => navigation.navigate('Verify')}
                 style={{
                   fontSize: 20,
                   fontWeight: 'bold',
                   color: '#FFFFFF',
                   marginTop: 10,
                   textAlign: 'center',
+                  
                 }}>
                 Verify
               </Text>
@@ -435,6 +518,46 @@ export default function HomeScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
+  navNow:{
+    backgroundColor: '#093FB4',
+    borderColor: '#FFFFFF',
+    borderWidth: 1,
+    borderRadius: 100,
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navNow2:{
+    backgroundColor: '#093FB4',
+    borderColor: '#FFFFFF',
+    borderWidth: 2,
+    borderRadius: 100,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navNot:{
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
+    borderWidth: 2,
+    borderRadius: 100,
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  separator: {
+        marginVertical: 23,
+        borderBottomColor: '#FFFFFF',
+        //borderBottomWidth: StyleSheet.hairlineWidth,
+        //marginLeft: 15,
+        //marginRight: 15,
+        borderWidth: 2,
+        borderColor: '#FFFFFF',
+        width: width * 0.15,
+  },
   signUpContainer: {
     bottom: -height * 0.45,
     width: width * 0.9,

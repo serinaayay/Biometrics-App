@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { UserProvider } from './context/UserContext';
+import { RegisProvider } from './context/RegisContext';
 import { RootStackParamList } from './navigation/types';
 import LogIn from './screens/Login';
 import ProfileScreen from './screens/ProfileScreen';
@@ -10,25 +11,28 @@ import Fingerprint from './screens/Fingerprint';
 import Verify from './screens/Verify';
 import Verify2 from './screens/Verify2';
 import InfoRegister from './screens/InfoRegister';
-
+import Submit from './screens/Submit';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
-    <UserProvider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="LogIn" screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="LogIn" component={LogIn} />
-          <Stack.Screen name="SignUp" component={SignUp} />
-          <Stack.Screen name="SignUp2" component={SignUp2} />
-          <Stack.Screen name="Fingerprint" component={Fingerprint} />
-          <Stack.Screen name="Verify" component={Verify} />
-          <Stack.Screen name="Verify2" component={Verify2} />
-          <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-          <Stack.Screen name="InfoRegister" component={InfoRegister} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </UserProvider>
+    <RegisProvider>
+      <UserProvider>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="LogIn" screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="LogIn" component={LogIn} />
+            <Stack.Screen name="SignUp" component={SignUp} />
+            <Stack.Screen name="SignUp2" component={SignUp2} />
+            <Stack.Screen name="Fingerprint" component={Fingerprint} />
+            <Stack.Screen name="Verify" component={Verify} />
+            <Stack.Screen name="Verify2" component={Verify2} />
+            <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
+            <Stack.Screen name="InfoRegister" component={InfoRegister} />
+            <Stack.Screen name="Submit" component={Submit} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </UserProvider>
+    </RegisProvider>
   );
 }

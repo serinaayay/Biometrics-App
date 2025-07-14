@@ -21,6 +21,8 @@ export interface UserData {
 
   // Employment Information (from SignUp2 screen)
   currentJob: string;
+  otherJob: string;
+  finalJob: string;
   skills: string[];
   workExperience: string;
   sssNumber: string;
@@ -45,6 +47,8 @@ const defaultUserData: UserData = {
   degree: '',
   university: '',
   currentJob: '',
+  otherJob: '',
+  finalJob: '',
   skills: [],
   workExperience: '',
   sssNumber: '',

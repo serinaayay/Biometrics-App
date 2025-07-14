@@ -1,5 +1,15 @@
+import React, { useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Dimensions, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
+import { 
+  Dimensions, 
+  StyleSheet, 
+  Text, 
+  TextInput, 
+  TouchableHighlight, 
+  View, 
+  Alert,
+  ActivityIndicator 
+} from 'react-native';
 import { RootStackParamList } from '../navigation/types';
 import '../global.css';
 
@@ -7,6 +17,96 @@ const { width, height } = Dimensions.get('window');
 type Props = NativeStackScreenProps<RootStackParamList, 'LogIn'>;
 
 const LogInScreen = ({ navigation }: Props) => {
+  const [email1, setEmail1] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const validateInput = () => {
+    if (!email1.trim()) {
+      const errorMsg = 'Email is required';
+      setError(errorMsg);
+      Alert.alert('Validation Error', errorMsg);
+      return false;
+    }
+    if (!password.trim()) {
+      const errorMsg = 'Password is required';
+      setError(errorMsg);
+      Alert.alert('Validation Error', errorMsg);
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email1)) {
+      const errorMsg = 'Please enter a valid email address';
+      setError(errorMsg);
+      Alert.alert('Validation Error', errorMsg);
+      return false;
+    }
+    return true;
+  };
+
+  const handleLogin = async () => {
+    setError('');
+    
+    if (!validateInput()) {
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch('http://192.168.68.146:5001/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email1: email1.trim(),
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Login successful - clear any previous errors
+        setError('');
+        Alert.alert(
+          'Success', 
+          'Login successful!',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                navigation.navigate('ProfileScreen'); 
+              }
+            }
+          ]
+        );
+      } else {
+        // Login failed - show error in alert and prevent navigation
+        const errorMsg = data.error || 'Login failed';
+        setError(errorMsg);
+        Alert.alert(
+          'Login Failed',
+          errorMsg,
+          [{ text: 'OK' }]
+        );
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      const errorMsg = 'Network error. Please check your connection and try again.';
+      setError(errorMsg);
+      Alert.alert(
+        'Connection Error',
+        errorMsg,
+        [{ text: 'OK' }]
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <View style={styles.bgColor}>
       <View style={{ alignItems: 'center', marginBottom: 12 }}>
@@ -23,17 +123,42 @@ const LogInScreen = ({ navigation }: Props) => {
           marginTop: 8,
           marginBottom: 4,
         }}>
+        
+        {error ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>{error}</Text>
+          </View>
+        ) : null}
+
         <Text style={styles.Title}>Email</Text>
         <TextInput
           style={styles.inputBox}
           placeholder="Enter your email"
           keyboardType="email-address"
+          value={email1}
+          onChangeText={setEmail1}
+          autoCapitalize="none"
+          autoCorrect={false}
+          editable={!loading}
         />
 
         <Text style={styles.Title}>Password</Text>
-        <TextInput style={styles.inputBox} placeholder="Enter your Password" />
+        <TextInput 
+          style={styles.inputBox} 
+          placeholder="Enter your Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={true}
+          autoCapitalize="none"
+          autoCorrect={false}
+          editable={!loading}
+        />
 
-        <TouchableHighlight onPress={() => alert('Button Pressed!')}>
+        <TouchableHighlight 
+          onPress={handleLogin}
+          disabled={loading}
+          style={{ opacity: loading ? 0.7 : 1 }}
+        >
           <View
             style={{
               backgroundColor: '#4B70E0',
@@ -43,16 +168,22 @@ const LogInScreen = ({ navigation }: Props) => {
               alignSelf: 'center',
               width: width * 0.7,
               alignItems: 'center',
+              minHeight: 44,
+              justifyContent: 'center',
             }}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4 }}>
-              Log In
-            </Text>
+            {loading ? (
+              <ActivityIndicator color="white" size="small" />
+            ) : (
+              <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4 }}>
+                Log In
+              </Text>
+            )}
           </View>
         </TouchableHighlight>
 
         <View style={styles.separator} />
 
-        <TouchableHighlight onPress={() => alert('Button Pressed!')}>
+        <TouchableHighlight onPress={() => alert('Fingerprint authentication not implemented yet')}>
           <View
             style={{
               backgroundColor: '#2D4078',
@@ -84,7 +215,7 @@ const LogInScreen = ({ navigation }: Props) => {
           Sign Up
         </Text>
         <Text
-          onPress={() => alert('text pressed')}
+          onPress={() => alert('Forgot password functionality not implemented yet')}
           style={{
             color: '#6289DD',
             fontSize: 14,
@@ -140,4 +271,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#E6EBF3',
   },
-});
+  errorContainer: {
+    backgroundColor: '#ffebee',
+    borderRadius: 8,
+    padding: 10,
+    margin: 10,
+    borderLeftWidth: 4,
+    borderLeftColor: '#f44336',
+  },
+  errorText: {
+    color: '#c62828',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+}); 

@@ -1,6 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
 import { Dimensions, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { useUser } from '../context/UserContext';
 import { RootStackParamList } from '../navigation/types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Verify2'>;
@@ -8,9 +9,16 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Verify2'>;
 const { width, height } = Dimensions.get('window');
 const options = ['Elementary', 'High School', 'Undergraduate/College', 'Vocational '];
 
+const jobChoice = ['Finance/Banking', 'Accounting', 'Admin/Office Support', 'Consulting/Strategy', 'Design/Architecture', 'Education/Training', 
+  'Engineering/Manufacturing', 'Healthcare/Medical', 'Hospitality/Travel', 'Human Resources', 'Government/Public Sector', 'Information Technology',
+  'Legal/Compliance', 'Marketing/Advertising', 'Media/Entertainment', 'Non-Profit/NGO', 'Real Estate/Property Management', 'Retail/Sales',
+  'Science/Research', 'Sports/Fitness', 'Telecommunications', 'Transportation/Logistics','Mining/Resources', 
+  'Agriculture/Farming', 'Construction/Trades', 'Self Employed/Freelance', 'Call Center/Customer Service'];
+
 export default function HomeScreen({ navigation }: Props){
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  const { userData, resetUserData } = useUser();
 
 
   // for handling user input skills
@@ -33,30 +41,53 @@ export default function HomeScreen({ navigation }: Props){
 
   return (
     <View style={{flex:1, backgroundColor: "#FFFFFF"}}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-        <View style={styles.signUpContainer}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>Sign Up</Text>
-        </View>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
+      <View style={styles.signUpContainer}>
+      <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>Verification</Text>
 
-        <Text style={{ fontSize: 23, fontWeight: 'bold', color: '#000000', marginTop: 350, marginLeft: 20 }}>Educational Background</Text>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 14}}>
+      <View style={styles.navNot}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>1</Text>
+        </View>
+        <View style={styles.separator} />
+        <View style={styles.navNow}>
+          <View style={styles.navNow2}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF' }}>2</Text>
+          </View>
+        </View>
+        <View style={styles.separator} />
+        <View style={styles.navNot}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>3</Text>
+        </View>
+      </View>
+
+      <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.68, marginTop: 5, alignSelf: 'center'}}>
+        <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center'}}>Sign Up</Text>
+        <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center', marginLeft: 60}}>Verification</Text>
+        <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center', marginLeft: 45 }}>Submission</Text>
+      </View>
+    </View>
+
+
+        <Text style={{ fontSize: 23, fontWeight: 'bold', color: '#000000', marginTop: width * 1, marginLeft: 20 }}>Educational Background</Text>
         <View style={styles.fieldContainer}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 1, marginLeft: 10 }}>Education Attainment</Text>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 1, marginLeft: 10 }}>Educational Attainment</Text>
             <TextInput
-              placeholder="Highschool"
+              placeholder={userData.educationalAttainment || 'Educational Attainment not provided'}
               placeholderTextColor="#093FB4"
               editable={false}
               style={styles.inputFields}/>
 
             <Text style={styles.topics}>Degree</Text>
             <TextInput
-              placeholder="..."
+              placeholder={userData.degree || 'Degree not provided'}
               placeholderTextColor="#093FB4"
               editable={false}
               style={styles.inputFields}/>
 
-            <Text style={styles.topics}>Collage/University</Text>
+            <Text style={styles.topics}>College/University</Text>
             <TextInput
-              placeholder="..."
+              placeholder={userData.university || 'College/University not provided'}
               placeholderTextColor="#093FB4"
               editable={false}
               style={styles.inputFields}/>
@@ -66,19 +97,10 @@ export default function HomeScreen({ navigation }: Props){
               <View style={styles.fieldContainer}>
               <Text style={styles.topics}>Current Job</Text>
               <TextInput
-               placeholder="..."
+               placeholder={userData.currentJob }
                placeholderTextColor="#093FB4"
                editable={false}
                style={styles.inputFields}/>
-
-               <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.8, marginTop: 20,  marginLeft: 20}}>
-                <Text style={{marginTop:10}}>Others</Text>
-                <TextInput
-               placeholder="Software Developer"
-               placeholderTextColor="#093FB4"
-               editable={false}
-               style={styles.jobField}/>
-               </View>
 
                <Text style={styles.topics}>Skills</Text>
                <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.8, marginTop: 20,  marginLeft: 20}}>
@@ -135,7 +157,7 @@ export default function HomeScreen({ navigation }: Props){
 
         <Pressable onPress={() => navigation.navigate('ProfileScreen')}>
                   <View style={styles.nextButton}>
-                    <Text style={{fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10, textAlign: 'center'}} onPress={() => navigation.navigate('ProfileScreen')}>Submit</Text>
+                    <Text style={{fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10, textAlign: 'center'}} onPress={() => navigation.navigate('Submit')}>Submit</Text>
                   </View>
                 </Pressable>
       </ScrollView>
@@ -144,6 +166,47 @@ export default function HomeScreen({ navigation }: Props){
 }
 
 const styles = StyleSheet.create({
+  navNow:{
+    backgroundColor: '#093FB4',
+    borderColor: '#FFFFFF',
+    borderWidth: 1,
+    borderRadius: 100,
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navNow2:{
+    backgroundColor: '#093FB4',
+    borderColor: '#FFFFFF',
+    borderWidth: 2,
+    borderRadius: 100,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  navNot:{
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FFFFFF',
+    borderWidth: 2,
+    borderRadius: 100,
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  separator: {
+        marginVertical: 23,
+        borderBottomColor: '#FFFFFF',
+        //borderBottomWidth: StyleSheet.hairlineWidth,
+        //marginLeft: 15,
+        //marginRight: 15,
+        borderWidth: 2,
+        borderColor: '#FFFFFF',
+        width: width * 0.15,
+  },
+
   topics:{
     fontSize: 20, 
     fontWeight: 'bold', 
@@ -307,5 +370,4 @@ const styles = StyleSheet.create({
     marginTop: 10
     
   },
-
 });
