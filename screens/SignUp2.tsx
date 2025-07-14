@@ -9,13 +9,14 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View,
+  View
 } from 'react-native';
 import { useUser, validateEducationalInfo, validateEmploymentInfo } from '../context/UserContext';
 import { RootStackParamList } from '../navigation/types';
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignUp2'>;
+
 
 const { width, height } = Dimensions.get('window');
 const options = ['Elementary', 'High School', 'Senior High School', 'Bachelor\'s Degree', 'Master\'s Degree', 'Doctorate'];
@@ -46,6 +47,7 @@ export default function HomeScreen({ navigation }: Props) {
   const [workExperience, setWorkExperience] = useState(userData.workExperience || '');
   const [sssNumber, setSssNumber] = useState(userData.sssNumber || '');
   const [sssNumberError, setSssNumberError] = useState('');
+  
 
   // for handling user input skills
   const [skills, setSkills] = useState<string[]>(userData.skills || []);
@@ -72,16 +74,30 @@ export default function HomeScreen({ navigation }: Props) {
         setSssNumberError('');
         return;
       }
+
+      const digitsOnly = text.replace(/[^0-9]/g, '');
+
+      if (digitsOnly === '') {
+        setSssNumber('');
+        setSssNumberError('SSS number must be 10 digits and follow the format ##-#######-#');
+        return;
+      }
+      const prevCleaned = sssNumber.replace(/[^0-9]/g, '');
         // Remove all non-numerical chars
       const cleaned = text.replace(/[^0-9]/g, '');
 
       const sliced = cleaned.slice(0, 10);
 
       let formatted = sliced;
-      if (sliced.length >= 2 && sliced.length <= 9) {
+      if (sliced.length >= 3 && sliced.length <= 9) {
           formatted = `${sliced.slice(0, 2)}-${sliced.slice(2)}`;
       } else if (sliced.length === 10) {
           formatted = `${sliced.slice(0, 2)}-${sliced.slice(2, 9)}-${sliced.slice(9)}`;
+      }
+
+       if (cleaned.length < prevCleaned.length) {
+        setSssNumber(text);
+        return;
       }
 
       setSssNumber(formatted);
@@ -136,11 +152,12 @@ export default function HomeScreen({ navigation }: Props) {
       educationalAttainment: selectedOption || '',
       degree: degree.trim(),
       university: university.trim(),
-      currentJob: selectedOption || '', // Use selectedOption2 for currentJob,
+      currentJob: selectedJobChoice || '', // Use selectedOption2 for currentJob,
       skills: skills,
       workExperience: workExperience.trim(),
       sssNumber: sssNumber.trim(),
       otherJob: selectedJobChoice || '',
+      finalJob: selectedOption === 'Others' ? currentJob : selectedJobChoice || '',
       isVerified: true, // Mark as verified when completing signup
     };
 
@@ -157,6 +174,11 @@ export default function HomeScreen({ navigation }: Props) {
       );
       return;
     }
+
+    console.log('currentJob:', currentJob);
+    console.log('selectedJobChoice:', selectedJobChoice);
+    console.log('otherJob:', selectedJobChoice === 'Others' ? currentJob : selectedJobChoice);
+
 
     // Save to context
     updateUserData(formData);
@@ -182,8 +204,8 @@ export default function HomeScreen({ navigation }: Props) {
       university: university.trim(),
       
       // Employment information  
-      currentJobTitle: selectedOption || '', // Note: model expects currentJobTitle, not currentJob// Store 'Others' if selected
-      otherJob: String,
+      currentJobTitle: selectedJobChoice || '', // Note: model expects currentJobTitle, not currentJob// Store 'Others' if selected
+      otherJob: selectedJobChoice || '',
       finalJob: selectedOption === 'Others' ? currentJob : selectedJobChoice,
       skills: skills,
       workExperience: workExperience.trim() ? parseInt(workExperience.trim()) || 0 : 0, // Convert to number
@@ -231,6 +253,8 @@ export default function HomeScreen({ navigation }: Props) {
     }
     
   };
+
+  // Removed unused renderItem function that referenced undefined onSelect.
 
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
@@ -310,7 +334,7 @@ export default function HomeScreen({ navigation }: Props) {
               </View>
             )}
 
-            <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 10 }}>
+             <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 10 }}>
               Degree
             </Text>
             <TextInput
@@ -318,7 +342,8 @@ export default function HomeScreen({ navigation }: Props) {
               placeholderTextColor="#9E9A9A"
               style={styles.inputFields}
               value={degree}
-              onChangeText={setDegree}/>
+              onChangeText={setDegree}
+            />
 
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 20, marginLeft: 10 }}>
               College/University
@@ -511,7 +536,7 @@ export default function HomeScreen({ navigation }: Props) {
             </View>
           </Pressable>
 
-          <Pressable onPress={handleVerify}>
+          <Pressable onPress={() => navigation.navigate('Verify')}>
             <View style={styles.nextButton}>
               <Text
                 style={{

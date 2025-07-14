@@ -16,8 +16,6 @@ const jobChoice = ['Finance/Banking', 'Accounting', 'Admin/Office Support', 'Con
   'Agriculture/Farming', 'Construction/Trades', 'Self Employed/Freelance', 'Call Center/Customer Service'];
 
 export default function HomeScreen({ navigation }: Props){
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
   const { userData, resetUserData } = useUser();
 
 
@@ -46,27 +44,27 @@ export default function HomeScreen({ navigation }: Props){
         <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>Sign Up</Text>
 
         <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 14}}>
-          <View style={styles.navNow}>
-            <View style={styles.navNow2}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF' }}>1</Text>
+            <View style={styles.navNot}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>1</Text>
+            </View>
+            <View style={styles.separator} />
+            <View style={styles.navNow}>
+              <View style={styles.navNow2}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF' }}>2</Text>
+              </View>
+            </View>
+            <View style={styles.separator} />
+            <View style={styles.navNot}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>3</Text>
             </View>
           </View>
-          <View style={styles.separator} />
-          <View style={styles.navNot}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>2</Text>
-          </View>
-          <View style={styles.separator} />
-          <View style={styles.navNot}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>3</Text>
+  
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.8, marginTop: 5, paddingLeft:8, paddingRight:8}}>
+            <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center' }}>Personal{'\n'}Information</Text>
+            <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center' }}>Verification</Text>
+            <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center' }}>Submission</Text>
           </View>
         </View>
-
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.8, marginTop: 5, paddingLeft:8, paddingRight:8}}>
-          <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center' }}>Personal{'\n'}Information</Text>
-          <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center' }}>Verification</Text>
-          <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center' }}>Submission</Text>
-        </View>
-      </View>
 
 
         <Text style={{ fontSize: 23, fontWeight: 'bold', color: '#000000', marginTop: width * 1, marginLeft: 20 }}>Educational Background</Text>
@@ -93,62 +91,37 @@ export default function HomeScreen({ navigation }: Props){
               style={styles.inputFields}/>
               </View>
 
-              <Text style={{ fontSize: 23, fontWeight: 'bold', color: '#000000', marginTop: 20, marginLeft: 20 }}>Employment Information</Text>
+            <Text style={{ fontSize: 23, fontWeight: 'bold', color: '#000000', marginTop: 20, marginLeft: 20 }}>Employment Information</Text>
               <View style={styles.fieldContainer}>
               <Text style={styles.topics}>Current Job</Text>
               <TextInput
-               placeholder={userData.currentJob }
+               placeholder={userData.finalJob || userData.currentJob || ''}
                placeholderTextColor="#093FB4"
                editable={false}
                style={styles.inputFields}/>
 
                <Text style={styles.topics}>Skills</Text>
                <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.8, marginTop: 20,  marginLeft: 20}}>
-                <TextInput
-               placeholder="Communication"
-               placeholderTextColor="#093FB4"
-               editable={false}
-               style={styles.skillField}/>
-               <TextInput
-               placeholder="Collaboration"
-               placeholderTextColor="#093FB4"
-               editable={false}
-               style={styles.skillField}/>
-               </View>
-               <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.8, marginTop: 15,  marginLeft: 20}}>
-                <TextInput
-               placeholder="Problem Solving"
-               placeholderTextColor="#093FB4"
-               editable={false}
-               style={styles.skillField}/>
-               <TextInput
-               placeholder="Time Management"
-               placeholderTextColor="#093FB4"
-               editable={false}
-               style={styles.skillField}/>
-               </View>
-               <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.8, marginTop: 15,  marginLeft: 20}}>
-                <TextInput
-               placeholder="Adaptability"
-               placeholderTextColor="#093FB4"
-               editable={false}
-               style={styles.skillField}/>
-               <TextInput
-               placeholder="..."
-               placeholderTextColor="#093FB4"
-               editable={false}
-               style={styles.skillField}/>
                </View>
 
-               <Text style={styles.topics}>Skills</Text>
+               <View style={styles.skillsContainer}>
+                  {userData.skills && userData.skills.length > 0 ? (
+                  userData.skills.map((skill, index) => (
+                <View key={index} style={styles.skillPill}>
+                <Text style={styles.skillText}>{skill}</Text>
+                </View>))) : (
+                <Text style={styles.noSkillsText}>No skills added</Text>)}
+              </View>
+
+               <Text style={styles.topics}>Work Experience</Text>
                <TextInput
-               placeholder="3 Years"
+               placeholder={userData.workExperience || 'No work experience provided'}
                placeholderTextColor="#093FB4"
                editable={false}
                style={styles.inputFields}/>
                <Text style={styles.topics}>SSS Number</Text>
                <TextInput
-               placeholder="01-1234567-1"
+               placeholder={userData.sssNumber || ''}
                placeholderTextColor="#093FB4"
                editable={false}
                style={styles.inputFields}/>
@@ -199,9 +172,6 @@ const styles = StyleSheet.create({
   separator: {
         marginVertical: 23,
         borderBottomColor: '#FFFFFF',
-        //borderBottomWidth: StyleSheet.hairlineWidth,
-        //marginLeft: 15,
-        //marginRight: 15,
         borderWidth: 2,
         borderColor: '#FFFFFF',
         width: width * 0.15,
@@ -210,16 +180,8 @@ const styles = StyleSheet.create({
   topics:{
     fontSize: 20, 
     fontWeight: 'bold', 
-    marginTop: 20, 
+    marginTop: width * 0.03, 
     marginLeft: 10
-  },
-  notPicked:{
-    color: '#9A9A9A',
-    fontWeight: 'bold',  
-    },
-  Picked:{
-    color: '#093FB4',
-    fontWeight: 'bold',
   },
   signUpContainer: {
     bottom: -height * 0.45,
@@ -368,6 +330,44 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     height: height * 0.07,
     marginTop: 10
-    
+  },
+  skillsContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      marginTop: width * 0.0,
+      justifyContent: 'flex-start',
+      paddingVertical: 5,
+      paddingHorizontal: 10,
+      marginBottom: 3,
+      marginLeft: 15,
+      marginHorizontal: 'auto',
+  },
+  skillText: {
+      color: '#093FB4',
+      fontWeight: '600',
+      fontSize: width * 0.04,
+      textAlign: 'center',
+      justifyContent: 'center',
+  },
+  noSkillsText: {
+      color: '#666',
+      fontStyle: 'italic',
+      fontSize: width * 0.04,
+      textAlign: 'center',
+      width: '100%',
+  },
+  skillPill: {
+      backgroundColor: '#FFFFFF',
+      borderRadius: width * 0.07,
+      paddingHorizontal: width * 0.05,
+      paddingVertical: width * 0.02,
+      marginRight: width * 0.03,
+      marginBottom: width * 0.03,
+      marginTop: width * 0.01,
+      shadowColor: '#000',
+      shadowOffset: { width: 2, height: 2 },
+      shadowOpacity: 0.15,
+      shadowRadius: 2,
+      elevation: 2,
   },
 });

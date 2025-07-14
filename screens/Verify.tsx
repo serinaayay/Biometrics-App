@@ -73,14 +73,14 @@ export default function HomeScreen({ navigation }: Props){
         <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>Sign Up</Text>
 
         <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 14}}>
-          <View style={styles.navNow}>
-            <View style={styles.navNow2}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF' }}>1</Text>
-            </View>
+          <View style={styles.navNot}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>1</Text>
           </View>
           <View style={styles.separator} />
-          <View style={styles.navNot}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>2</Text>
+          <View style={styles.navNow}>
+            <View style={styles.navNow2}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF' }}>2</Text>
+            </View>
           </View>
           <View style={styles.separator} />
           <View style={styles.navNot}>

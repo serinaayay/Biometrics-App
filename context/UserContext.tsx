@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
 
 // Define the user data structure based on the sign up forms
 export interface UserData {
@@ -21,6 +21,8 @@ export interface UserData {
 
   // Employment Information (from SignUp2 screen)
   currentJob: string;
+  otherJob: string;
+  finalJob: string; // This will be used to store the final job choice
   skills: string[];
   workExperience: string;
   sssNumber: string;
@@ -45,6 +47,8 @@ const defaultUserData: UserData = {
   degree: '',
   university: '',
   currentJob: '',
+  finalJob: '',
+  otherJob: '',
   skills: [],
   workExperience: '',
   sssNumber: '',
