@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Dimensions, Pressable, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
-import { RootStackParamList } from '../navigation/types';
 import '../global.css';
+import { RootStackParamList } from '../navigation/types';
 
 const { width, height } = Dimensions.get('window');
 type Props = NativeStackScreenProps<RootStackParamList, 'InfoRegister'>;
@@ -9,33 +9,22 @@ type Props = NativeStackScreenProps<RootStackParamList, 'InfoRegister'>;
 const LogInScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.bgColor}>
-      <View style={{ alignItems: 'center', marginBottom: 12 }}>
-        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#FFFFFF', marginLeft: 5 }}>
-          Sign Up
-        </Text>
-      </View>
+      <View style={styles.container}>
+        <View style = {{alignItems: 'center', marginTop: 20}}>
+          <Text style={styles.Title}>Sign Up</Text>
+          </View>
 
-      <View
-        style={{
-          borderRadius: 12,
-          backgroundColor: '#FFFFFF',
-          padding: 4,
-          marginTop: 8,
-          marginBottom: 4,
-        }}>
-        <Text style={styles.Title}>Email</Text>
-        <TextInput
-          style={styles.inputBox}
-          placeholder="Enter your email"
-          keyboardType="email-address"/>
+          <View style = {{padding: 40}}>
+          <Text style={styles.subtitle}>Email</Text>
+          <TextInput style={styles.inputBox} placeholder='Enter your email' />
+          <View style={{height: 20}} /> 
+          <Text style={styles.subtitle}>Password</Text>
+          <TextInput style={styles.inputBox} placeholder='Enter your password' />
+          <View style={{height: 20}} /> 
+          <Text style={styles.subtitle}>Confirm your Password</Text>
+          <TextInput style={styles.inputBox} placeholder='Enter your password' />
 
-        <Text style={styles.Title}>Password</Text>
-        <TextInput style={styles.inputBox} placeholder="Enter your Password" />
-
-        <Text style={styles.Title}>Confirm your Password</Text>
-        <TextInput style={styles.inputBox} placeholder="Confirm your Password" />
-
-        <Pressable onPress={() => navigation.navigate('SignUp')}>
+          <Pressable onPress={() => navigation.navigate('SignUp')}>
           <View
             style={{
               backgroundColor: '#4B70E0',
@@ -47,7 +36,7 @@ const LogInScreen = ({ navigation }: Props) => {
               alignItems: 'center',
             }}>
             <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4 }}>
-              Log In
+              Sign Up
             </Text>
           </View>
         </Pressable>
@@ -71,31 +60,11 @@ const LogInScreen = ({ navigation }: Props) => {
             </Text>
           </View>
         </TouchableHighlight>
-      </View>
 
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <Text
-          onPress={() => navigation.navigate('SignUp')}
-          style={{
-            color: '#6289DD',
-            fontSize: 14,
-            fontWeight: '500',
-            marginLeft: 5,
-            marginTop: 3,
-          }}>
-          Sign In
-        </Text>
-        <Text
-          onPress={() => alert('text pressed')}
-          style={{
-            color: '#6289DD',
-            fontSize: 14,
-            fontWeight: '500',
-            marginRight: 6,
-            marginTop: 3,
-          }}>
-          Forgot Password?
-        </Text>
+        <Pressable onPress={() => navigation.navigate('LogIn')}>
+        <Text style={{fontSize: 13, marginTop: 11, textDecorationLine: 'underline'}}>Sign In</Text>
+        </Pressable>
+      </View>
       </View>
     </View>
   );
@@ -104,9 +73,26 @@ const LogInScreen = ({ navigation }: Props) => {
 export default LogInScreen;
 
 const styles = StyleSheet.create({
+  subtitle:{
+    fontSize: 20,
+    color: '#213563',
+    fontWeight: 'bold',
+    //marginLeft: 30,
+    //marginTop: 30,
+  },
+  container: {
+    flex: 1,
+    padding: 0,
+    //ustifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 15,
+    elevation: 5,
+  },
   bgColor: {
     flex: 1,
-    padding: 42,
+    padding: 30,
+    paddingTop: 150,
+    paddingBottom: 180,
     justifyContent: 'center',
     backgroundColor: '#093FB4',
   },
@@ -117,22 +103,21 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
   },
-  Title: {
-    fontSize: 20,
+    Title: {
+    fontSize: 35,
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#213563',
     marginTop: 10,
     marginLeft: 17,
   },
   inputBox: {
     height: 40,
-    marginTop: height * 0.02,
-    marginBottom: height * 0.01,
-    width: width * 0.7,
-    marginLeft: 14,
+    alignSelf: 'center',
+    width: width * 0.66,
+    marginTop: 15,
     padding: 10,
     borderRadius: 10,
-    backgroundColor: '#E6EBF3',
+    backgroundColor: '#F5F5F5',
   },
   button: {
     height: 40,

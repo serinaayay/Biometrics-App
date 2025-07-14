@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Dimensions, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
-import { RootStackParamList } from '../navigation/types';
 import '../global.css';
+import { RootStackParamList } from '../navigation/types';
 
 const { width, height } = Dimensions.get('window');
 type Props = NativeStackScreenProps<RootStackParamList, 'LogIn'>;
@@ -9,29 +9,21 @@ type Props = NativeStackScreenProps<RootStackParamList, 'LogIn'>;
 const LogInScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.bgColor}>
-      <View style={{ alignItems: 'center', marginBottom: 12 }}>
-        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#FFFFFF', marginLeft: 5 }}>
-          Sign In
-        </Text>
-      </View>
+      <View style={styles.container}>
+        <View style = {{alignItems: 'center', marginTop: 20}}>
+          <Text style={styles.Title}>Sign In</Text>
+        </View>
 
-      <View
-        style={{
-          borderRadius: 12,
-          backgroundColor: '#FFFFFF',
-          padding: 4,
-          marginTop: 8,
-          marginBottom: 4,
-        }}>
-        <Text style={styles.Title}>Email</Text>
-        <TextInput
-          style={styles.inputBox}
-          placeholder="Enter your email"
-          keyboardType="email-address"
-        />
+      <View style = {{padding: 40}}>
+        <Text style={styles.subtitle}>Email</Text>
+        <TextInput style={styles.inputBox} placeholder='Enter your email' />
+        <View style={{height: 25}} />
+        <Text style={styles.subtitle}>Password</Text>
+        <TextInput style={styles.inputBox} placeholder='Enter your password' />
 
-        <Text style={styles.Title}>Password</Text>
-        <TextInput style={styles.inputBox} placeholder="Enter your Password" />
+
+        <View style={{height: 20}} />
+        <View style={styles.separator} />
 
         <TouchableHighlight onPress={() => alert('Button Pressed!')}>
           <View
@@ -49,16 +41,13 @@ const LogInScreen = ({ navigation }: Props) => {
             </Text>
           </View>
         </TouchableHighlight>
-
-        <View style={styles.separator} />
-
         <TouchableHighlight onPress={() => alert('Button Pressed!')}>
           <View
             style={{
               backgroundColor: '#2D4078',
               borderRadius: 12,
               padding: 4,
-              marginTop: 5,
+              marginTop: 10,
               marginBottom: 12,
               alignSelf: 'center',
               width: width * 0.7,
@@ -69,15 +58,14 @@ const LogInScreen = ({ navigation }: Props) => {
             </Text>
           </View>
         </TouchableHighlight>
-      </View>
 
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text
           onPress={() => navigation.navigate('InfoRegister')}
           style={{
-            color: '#6289DD',
+            color: '#000000',
             fontSize: 14,
-            fontWeight: '500',
+            fontWeight: '400',
             marginLeft: 5,
             marginTop: 3,
           }}>
@@ -86,25 +74,44 @@ const LogInScreen = ({ navigation }: Props) => {
         <Text
           onPress={() => alert('text pressed')}
           style={{
-            color: '#6289DD',
+            color: '#000000',
             fontSize: 14,
-            fontWeight: '500',
+            fontWeight: '400',
             marginRight: 6,
             marginTop: 3,
           }}>
           Forgot Password?
         </Text>
       </View>
-    </View>
+      </View>
+      </View>
+      </View>
   );
 };
 
 export default LogInScreen;
 
 const styles = StyleSheet.create({
+  subtitle:{
+    fontSize: 20,
+    color: '#213563',
+    fontWeight: 'bold',
+    //marginLeft: 30,
+    //marginTop: 30,
+  },
+  container: {
+    flex: 1,
+    padding: 0,
+    //ustifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 15,
+  },
+
   bgColor: {
     flex: 1,
-    padding: 42,
+    padding: 30,
+    paddingTop: 200,
+    paddingBottom: 200,
     justifyContent: 'center',
     backgroundColor: '#093FB4',
   },
@@ -116,21 +123,21 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   Title: {
-    fontSize: 20,
+    fontSize: 35,
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#213563',
     marginTop: 10,
     marginLeft: 17,
+
   },
   inputBox: {
     height: 40,
-    marginTop: height * 0.02,
-    marginBottom: height * 0.01,
-    width: width * 0.7,
-    marginLeft: 14,
+    alignSelf: 'center',
+    width: width * 0.66,
+    marginTop: 15,
     padding: 10,
     borderRadius: 10,
-    backgroundColor: '#E6EBF3',
+    backgroundColor: '#F5F5F5',
   },
   button: {
     height: 40,
@@ -139,5 +146,20 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     backgroundColor: '#E6EBF3',
+  },
+  nextButton: {
+    marginTop: height * 0.03,
+    marginBottom: height * 0.02,
+    width: width * 0.5,
+    borderRadius: width * 0.05,
+    backgroundColor: '#4B70E0',
+    shadowColor: '#000000',
+    shadowOffset: { width: 5, height: 5 },
+    shadowOpacity: 0.1,
+    shadowRadius: 0.1,
+    elevation: 2.0,
+    height: height * 0.07,
+    alignSelf: 'center',
+    alignItems: 'center',
   },
 });

@@ -2,6 +2,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 // Define the navigation stack parameters
 export type RootStackParamList = {
+  atest: undefined;
+  btest: undefined;
   LogIn: undefined;
   Password: undefined;
   SignUp: undefined;
@@ -33,6 +35,9 @@ export type Verify2ScreenProps = NativeStackScreenProps<RootStackParamList, 'Ver
 export type InfoRegisterScreenProps = NativeStackScreenProps<RootStackParamList, 'InfoRegister'>;
 export type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, 'ProfileScreen'>;
 export type SubmissionScreenProps = NativeStackScreenProps<RootStackParamList, 'Submission'>;
+
+export type atestScreenProps = NativeStackScreenProps<RootStackParamList, 'atest'>;
+export type btestScreenProps = NativeStackScreenProps<RootStackParamList, 'btest'>;
 
 
 export type FingerprintAuthScreenProps = NativeStackScreenProps<
