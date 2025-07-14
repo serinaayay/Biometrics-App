@@ -84,16 +84,40 @@ export default function HomeScreen({ navigation }: Props) {
     // Save to context
     updateUserData(formData);
 
-    // Prepare complete user data for database
+    // Prepare complete user data for database - include ALL registration data
     const completeUserData = {
+      // Personal Information
+      fullName: userData.fullName, 
+      email: userData.email,
+      phoneNumber: userData.phoneNumber, 
+      gender: userData.gender,
+      dateOfBirth: userData.dateOfBirth,
+      placeOfBirth: userData.placeOfBirth || '',
+      nationality: userData.nationality || 'Filipino',
+      maritalStatus: userData.maritalStatus || 'Single',
+      temporaryAddress: userData.temporaryAddress || '',
+      permanentAddress: userData.permanentAddress,
       
-      // Account status
+      // Educational Background
+      educationalAttainment: userData.educationalAttainment || '',
+      degree: userData.degree || '', 
+      university: userData.university || '',
+      
+      // Employment Information  
+      currentJob: userData.currentJob || '',
+      skills: userData.skills || [],
+      workExperience: userData.workExperience || '',
+      sssNumber: userData.sssNumber || '',
+      
+      // Account status and fingerprint information
       isVerified: true,
       isActive: true,
-      fingerprintEnabled: false, // Will be enabled when fingerprint is registered
-      
-      // Temporary fix for database constraint
+      fingerprintEnabled: true, // Set to true since user is completing fingerprint registration
       fingerprintId: Date.now().toString(), // Use timestamp as unique ID
+      
+      // Registration metadata
+      registrationDate: new Date().toISOString(),
+      lastUpdated: new Date().toISOString()
     };
 
     try {

@@ -170,7 +170,7 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
         <View style={styles.pillHeaderRow}>
           <View style={styles.pillHeaderField}>
             <Text style={styles.sectionpillcontent} numberOfLines={1} ellipsizeMode="tail">
-              Educational Attainment:
+              {getDisplayValue(userData.educationalAttainment)}
             </Text>
             <Text style={styles.sectionpillcontent} numberOfLines={1} ellipsizeMode="tail">
               Degree:
