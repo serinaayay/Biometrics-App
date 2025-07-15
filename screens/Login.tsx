@@ -33,7 +33,7 @@ const LogInScreen = ({ navigation }: Props) => {
               padding: 4,
               marginTop: 20,
               alignSelf: 'center',
-              width: width * 0.7,
+              width: width * 0.66,
               alignItems: 'center',
             }}>
             <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4 }}>
@@ -50,7 +50,7 @@ const LogInScreen = ({ navigation }: Props) => {
               marginTop: 10,
               marginBottom: 12,
               alignSelf: 'center',
-              width: width * 0.7,
+              width: width * 0.66,
               alignItems: 'center',
             }}>
             <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4 }}>
@@ -102,13 +102,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 0,
-    //ustifyContent: 'center',
+    justifyContent: 'center',
     backgroundColor: '#FFFFFF',
     borderRadius: 15,
     elevation: 5,
     height: height * 0.8, 
-    maxHeight: 600, 
-    minHeight: 300, 
   },
 
   bgColor: {
@@ -123,8 +121,8 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderBottomColor: '#737373',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    marginLeft: 15,
-    marginRight: 15,
+    marginLeft: 6,
+    marginRight: 6,
   },
   Title: {
     fontSize: 35,
@@ -147,7 +145,7 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 40,
-    width: width * 0.5,
+    width: width * 0.6,
     marginTop: 20,
     padding: 10,
     borderRadius: 10,

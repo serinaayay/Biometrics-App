@@ -24,6 +24,8 @@ const LogInScreen = ({ navigation }: Props) => {
           <Text style={styles.subtitle}>Confirm your Password</Text>
           <TextInput style={styles.inputBox} placeholder='Enter your password' />
 
+          <View style={{height: 6}} /> 
+
           <Pressable onPress={() => navigation.navigate('SignUp')}>
           <View
             style={{
@@ -31,8 +33,9 @@ const LogInScreen = ({ navigation }: Props) => {
               borderRadius: 12,
               padding: 4,
               marginTop: 20,
+              marginBottom: 5,
               alignSelf: 'center',
-              width: width * 0.7,
+              width: width * 0.66,
               alignItems: 'center',
             }}>
             <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4 }}>
@@ -52,7 +55,7 @@ const LogInScreen = ({ navigation }: Props) => {
               marginTop: 5,
               marginBottom: 12,
               alignSelf: 'center',
-              width: width * 0.7,
+              width: width * 0.66,
               alignItems: 'center',
             }}>
             <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4 }}>
@@ -62,7 +65,7 @@ const LogInScreen = ({ navigation }: Props) => {
         </TouchableHighlight>
 
         <Pressable onPress={() => navigation.navigate('LogIn')}>
-        <Text style={{fontSize: 13, marginTop: 11, textDecorationLine: 'underline'}}>Sign In</Text>
+        <Text style={{fontSize: 13, marginTop: 5, textDecorationLine: 'underline'}}>Sign In</Text>
         </Pressable>
       </View>
       </View>
@@ -103,8 +106,8 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     borderBottomColor: '#737373',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    marginLeft: 15,
-    marginRight: 15,
+    marginLeft: 6,
+    marginRight: 6,
   },
     Title: {
     fontSize: 35,
