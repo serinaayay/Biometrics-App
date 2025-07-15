@@ -87,6 +87,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 15,
     elevation: 5,
+    height: height * 0.8, 
+    maxHeight: 600, 
+    minHeight: 300, 
   },
   bgColor: {
     flex: 1,
