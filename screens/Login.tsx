@@ -134,6 +134,8 @@ const styles = StyleSheet.create({
     height: 40,
     alignSelf: 'center',
     width: width * 0.66,
+    maxWidth: 350, 
+    minWidth: 200, 
     marginTop: 15,
     padding: 10,
     borderRadius: 10,
