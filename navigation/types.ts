@@ -11,10 +11,8 @@ export type RootStackParamList = {
   Verify: undefined;
   Verify2: undefined;
   InfoRegister: undefined;
-<<<<<<< HEAD
   Submission: undefined;
-=======
->>>>>>> Try-Luis
+  FingerprintRegis: undefined;
   Submit: undefined;
   FingerprintAuth?: {
     userId?: string;
@@ -37,6 +35,7 @@ export type InfoRegisterScreenProps = NativeStackScreenProps<RootStackParamList,
 export type SubmitScreenProps = NativeStackScreenProps<RootStackParamList, 'Submit'>;
 export type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, 'ProfileScreen'>;
 export type SubmissionScreenProps = NativeStackScreenProps<RootStackParamList, 'Submission'>;
+export type FingerprintRegisScreenProps = NativeStackScreenProps<RootStackParamList, 'FingerprintRegis'>;
 
 
 export type FingerprintAuthScreenProps = NativeStackScreenProps<

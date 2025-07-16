@@ -1,10 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Dimensions, Pressable, StyleSheet, Text, TextInput, TouchableHighlight, View, Alert, ActivityIndicator } from 'react-native';
-import { RootStackParamList } from '../navigation/types';
-import '../global.css';
+import { Buffer } from 'buffer';
 import { useState } from 'react';
+import { ActivityIndicator, Alert, Dimensions, Pressable, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
+import { getApiUrl } from '../config/api';
 import { useRegis, validateRegisData } from '../context/RegisContext';
-import {Buffer} from 'buffer';
+import '../global.css';
+import { RootStackParamList } from '../navigation/types';
 const { width, height } = Dimensions.get('window');
 type Props = NativeStackScreenProps<RootStackParamList, 'InfoRegister'>;
 
@@ -25,7 +26,7 @@ export default function InfoRegister({ navigation }: Props) {
   const validatePasswords = (passwordText: string): void => { 
     if (passwordText.length < 8) {
       setPasswordError('Password must be at least 8 characters long');
-    } else if (passwordText !== confirmPassword && confirmPassword !== '') {
+    } if (passwordText !== confirmPassword && confirmPassword !== '') {
       setPasswordError('Passwords do not match');
     } else {
       setPasswordError('');
@@ -55,7 +56,7 @@ export default function InfoRegister({ navigation }: Props) {
   // Function to save registration data to MongoDB
   const saveRegisToDatabase = async (registrationData: any) => {
     try {
-      const API_BASE_URL = 'http://192.168.68.146:5001';
+      const API_BASE_URL = getApiUrl();
       
       console.log('Attempting to save registration data to database at:', API_BASE_URL);
       console.log('Registration data:', JSON.stringify({...registrationData, password: '[HASHED]'}, null, 2));
@@ -69,11 +70,15 @@ export default function InfoRegister({ navigation }: Props) {
       });
 
       console.log('Response status:', response.status);
+
+      
       
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Server error response:', errorData);
         throw new Error(errorData.error || `Failed to save registration data (Status: ${response.status})`);
+
+
       }
 
       const savedRegistration = await response.json();
@@ -85,7 +90,8 @@ export default function InfoRegister({ navigation }: Props) {
       console.error('Error details:', errorMessage);
       throw error;
     }
-  };
+  };  
+    
 
   const handleSignUp = async () => {
     console.log('Continue to Sign Up button pressed!');
@@ -170,20 +176,13 @@ export default function InfoRegister({ navigation }: Props) {
 
   return (
     <View style={styles.bgColor}>
+      <View style={styles.container}>
       <View style={{ alignItems: 'center', marginBottom: 12 }}>
-        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#FFFFFF', marginLeft: 5 }}>
+        <Text style={{ fontSize: 30, fontWeight: 'bold', color:'#093FB4', marginTop: 10}}>
           Sign Up
         </Text>
       </View>
 
-      <View
-        style={{
-          borderRadius: 12,
-          backgroundColor: '#FFFFFF',
-          padding: 4,
-          marginTop: 8,
-          marginBottom: 4,
-        }}>
         <Text style={styles.Title}>Email</Text>
         <TextInput
           style={styles.inputBox}
@@ -192,8 +191,7 @@ export default function InfoRegister({ navigation }: Props) {
           onChangeText={setEmail1}
           keyboardType="email-address"
           autoCapitalize="none"
-          editable={!loading}
-        />
+          editable={!loading}/>
 
         <Text style={styles.Title}>Password</Text>
         <TextInput 
@@ -257,17 +255,17 @@ export default function InfoRegister({ navigation }: Props) {
               borderRadius: 12,
               padding: 4,
               marginTop: 5,
-              marginBottom: 12,
               alignSelf: 'center',
               width: width * 0.7,
               alignItems: 'center',
+              marginBottom: 12,
             }}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4 }}>
+            <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4}}>
               Scan Fingerprint
             </Text>
           </View>
         </TouchableHighlight>
-      </View>
+        </View>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text
@@ -277,9 +275,9 @@ export default function InfoRegister({ navigation }: Props) {
             fontSize: 14,
             fontWeight: '500',
             marginLeft: 5,
-            marginTop: 3,
+            marginTop: 0.02
           }}>
-          Already have an account? Sign In
+          Sign In
         </Text>
         <Text
           onPress={() => Alert.alert('Forgot Password', 'Forgot password functionality coming soon!')}
@@ -288,11 +286,12 @@ export default function InfoRegister({ navigation }: Props) {
             fontSize: 14,
             fontWeight: '500',
             marginRight: 6,
-            marginTop: 3,
+            marginTop: 0.02,
           }}>
           Forgot Password?
         </Text>
       </View>
+
     </View>
   );
 }
@@ -303,6 +302,15 @@ const styles = StyleSheet.create({
     padding: 42,
     justifyContent: 'center',
     backgroundColor: '#093FB4',
+  },
+  container: {
+    backgroundColor: '#FFFFFF',
+    padding: 4,
+    marginTop: 8,
+    marginBottom: 15,
+    justifyContent: 'center',
+    borderRadius: 15,
+    elevation: 5,
   },
   separator: {
     marginVertical: 8,
@@ -315,7 +323,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#000000',
-    marginTop: 10,
+    marginTop: 15,
     marginLeft: 17,
   },
   inputBox: {

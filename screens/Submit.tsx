@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useState } from 'react';
 import { Dimensions, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { RootStackParamList } from '../navigation/types';
 
@@ -12,36 +11,6 @@ export default function HomeScreen({ navigation }: Props) {
 
   return (
     <View style={{flex:1, backgroundColor: "#FFFFFF"}}>
-<<<<<<< HEAD
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-
-      <View style={styles.signUpContainer}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>Sign Up</Text>
-
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 14}}>
-          <View style={styles.navNot}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>1</Text>
-          </View>
-          <View style={styles.separator} />
-          <View style={styles.navNot}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>2</Text>
-          </View>
-          <View style={styles.separator} />
-          <View style={styles.navNow}>
-            <View style={styles.navNow2}>
-          <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF' }}>3</Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.8, marginTop: 5, paddingLeft:8, paddingRight:8}}>
-          <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center' }}>Personal{'\n'}Information</Text>
-          <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center' }}>Verification</Text>
-          <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center' }}>Submission</Text>
-        </View>
-      </View>
-
-=======
     <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
       <View style={styles.signUpContainer}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>Submission</Text>
@@ -68,10 +37,6 @@ export default function HomeScreen({ navigation }: Props) {
         <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center', marginLeft: 45 }}>Submission</Text>
       </View>
     </View>
-
-
->>>>>>> Try-Luis
-
       <View style={styles.container}>
         <View style={styles.green}>
             <Image

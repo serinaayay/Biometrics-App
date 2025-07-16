@@ -170,7 +170,7 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
         <View style={styles.pillHeaderRow}>
           <View style={styles.pillHeaderField}>
             <Text style={styles.sectionpillcontent} numberOfLines={1} ellipsizeMode="tail">
-              {getDisplayValue(userData.educationalAttainment)}
+              Educational Attainment:
             </Text>
             <Text style={styles.sectionpillcontent} numberOfLines={1} ellipsizeMode="tail">
               Degree:
@@ -205,7 +205,7 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
               </View>
             ))
           ) : (
-            <Text style={styles.noSkillsText}>No skills added</Text>
+            <Text style={styles.noSkillsText}>No skills added yet</Text>
           )}
         </View>
       </View>
@@ -417,7 +417,6 @@ function getStyles(width: number) {
       borderRadius: width * 0.07,
       paddingHorizontal: width * 0.05,
       paddingVertical: width * 0.02,
-      marginLeft: width * 0.02,
       marginRight: width * 0.03,
       marginBottom: width * 0.03,
       shadowColor: '#000',

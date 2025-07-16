@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { 
-  Dimensions, 
-  StyleSheet, 
-  Text, 
-  TextInput, 
-  TouchableHighlight, 
-  View, 
+import { useState } from 'react';
+import {
+  ActivityIndicator,
   Alert,
-  ActivityIndicator 
+  Dimensions,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableHighlight,
+  View
 } from 'react-native';
-import { RootStackParamList } from '../navigation/types';
+import { getApiUrl } from '../config/api';
+import { useUser } from '../context/UserContext';
 import '../global.css';
+import { RootStackParamList } from '../navigation/types';
 
 const { width, height } = Dimensions.get('window');
 type Props = NativeStackScreenProps<RootStackParamList, 'LogIn'>;
@@ -21,6 +23,7 @@ const LogInScreen = ({ navigation }: Props) => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { updateUserData, resetUserData } = useUser();
 
   const validateInput = () => {
     if (!email1.trim()) {
@@ -55,21 +58,76 @@ const LogInScreen = ({ navigation }: Props) => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://192.168.68.146:5001/api/login', {
+      // Reset user data before login
+      resetUserData();
+
+      // Single login attempt - backend handles password variations
+      const response = await fetch(`${getApiUrl()}/api/auth/login`,{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email1: email1.trim(),
-          password: password,
+          password: password, // Send original password - backend handles variations
         }),
       });
+
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Server returned non-JSON response. Backend server may not be running.');
+      }
 
       const data = await response.json();
 
       if (response.ok) {
-        // Login successful - clear any previous errors
+        // Login successful
+        console.log('Authentication successful!');
+        console.log('Login response data:', data);
+        
+        // Check if profile data is included in response
+        if (data.profile) {
+          const userProfile = data.profile;
+          console.log('User profile found in login response:', userProfile);
+          
+          // Transform profile data to match UserContext interface
+          const userContextData = {
+            fullName: userProfile.fullName || '',
+            email: userProfile.email || email1.trim(),
+            gender: userProfile.gender || '',
+            dateOfBirth: userProfile.dateOfBirth ? new Date(userProfile.dateOfBirth) : new Date(),
+            placeOfBirth: userProfile.placeOfBirth || '',
+            nationality: userProfile.nationality || '',
+            maritalStatus: userProfile.maritalStatus || '',
+            temporaryAddress: userProfile.temporaryAddress || '',
+            permanentAddress: userProfile.permanentAddress || '',
+            phoneNumber: userProfile.phoneNumber || '',
+            educationalAttainment: userProfile.educationalAttainment || '',
+            degree: userProfile.degree || '',
+            university: userProfile.university || userProfile.college || '',
+            currentJob: userProfile.currentJob || userProfile.currentJobTitle || '',
+            otherJob: userProfile.otherJob || '',
+            finalJob: userProfile.finalJob || '',
+            skills: userProfile.skills || [],
+            workExperience: userProfile.workExperience || '',
+            sssNumber: userProfile.sssNumber || '',
+            isVerified: userProfile.isVerified || true,
+          };
+
+          // Update UserContext with complete profile data
+          updateUserData(userContextData);
+          console.log('User context updated with profile data');
+        } else {
+          // If no profile data, set basic user info
+          const basicUserData2 = {
+            email: data.user?.email || email1.trim(),
+          };
+          updateUserData(basicUserData2);
+          console.log('No profile found, setting basic user data in context');
+        }
+
+        // Clear errors and navigate to profile
         setError('');
         Alert.alert(
           'Success', 
@@ -84,26 +142,33 @@ const LogInScreen = ({ navigation }: Props) => {
           ]
         );
       } else {
-        // Login failed - show error in alert and prevent navigation
+        // Login failed
         const errorMsg = data.error || 'Login failed';
         setError(errorMsg);
-        Alert.alert(
-          'Login Failed',
-          errorMsg,
-          [{ text: 'OK' }]
-        );
+        Alert.alert('Login Failed', errorMsg, [{ text: 'OK' }]);
       }
+
     } catch (error) {
       console.error('Login error:', error);
       const errorMsg = 'Network error. Please check your connection and try again.';
       setError(errorMsg);
-      Alert.alert(
-        'Connection Error',
-        errorMsg,
-        [{ text: 'OK' }]
-      );
+      Alert.alert('Connection Error', errorMsg, [{ text: 'OK' }]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Test API connection
+  const testApiConnection = async () => {
+    try {
+      console.log('Testing API connection to:', getApiUrl());
+      const response = await fetch(`${getApiUrl()}/api/test`);
+      const data = await response.json();
+      console.log('API test successful:', data);
+      Alert.alert('API Connection', `Successfully connected to: ${getApiUrl()}`);
+    } catch (error) {
+      console.error('API test failed:', error);
+      Alert.alert('API Connection Failed', `Could not connect to: ${getApiUrl()}\n\nIs your backend server running?`);
     }
   };
 
@@ -183,7 +248,7 @@ const LogInScreen = ({ navigation }: Props) => {
 
         <View style={styles.separator} />
 
-        <TouchableHighlight onPress={() => alert('Fingerprint authentication not implemented yet')}>
+        <TouchableHighlight onPress={testApiConnection}>
           <View
             style={{
               backgroundColor: '#2D4078',
@@ -196,7 +261,7 @@ const LogInScreen = ({ navigation }: Props) => {
               alignItems: 'center',
             }}>
             <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4 }}>
-              Scan Fingerprint
+              Test API Connection
             </Text>
           </View>
         </TouchableHighlight>

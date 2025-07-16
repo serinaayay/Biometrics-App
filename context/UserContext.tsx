@@ -4,6 +4,7 @@ import React, { createContext, ReactNode, useContext, useState } from 'react';
 export interface UserData {
   // Personal Information (from SignUp screen)
   fullName: string;
+  email: string; 
   gender: 'Male' | 'Female' | 'Prefer not to say' | '';
   dateOfBirth: Date;
   placeOfBirth: string;
@@ -11,7 +12,6 @@ export interface UserData {
   maritalStatus: 'Single' | 'Married' | 'Divorced' | 'Widowed' | '';
   temporaryAddress: string;
   permanentAddress: string;
-  email: string;
   phoneNumber: string;
 
   // Educational Background (from SignUp2 screen)
@@ -22,11 +22,7 @@ export interface UserData {
   // Employment Information (from SignUp2 screen)
   currentJob: string;
   otherJob: string;
-<<<<<<< HEAD
-  finalJob: string; // This will be used to store the final job choice
-=======
   finalJob: string;
->>>>>>> Try-Luis
   skills: string[];
   workExperience: string;
   sssNumber: string;
@@ -38,6 +34,7 @@ export interface UserData {
 // Default user data
 const defaultUserData: UserData = {
   fullName: '',
+  email: '',
   gender: '',
   dateOfBirth: new Date(),
   placeOfBirth: '',
@@ -45,19 +42,13 @@ const defaultUserData: UserData = {
   maritalStatus: '',
   temporaryAddress: '',
   permanentAddress: '',
-  email: '',
   phoneNumber: '',
   educationalAttainment: '',
   degree: '',
   university: '',
   currentJob: '',
-<<<<<<< HEAD
-  finalJob: '',
-  otherJob: '',
-=======
   otherJob: '',
   finalJob: '',
->>>>>>> Try-Luis
   skills: [],
   workExperience: '',
   sssNumber: '',
@@ -120,12 +111,6 @@ export const validatePersonalInfo = (data: Partial<UserData>): string[] => {
 
   if (!data.permanentAddress?.trim()) {
     errors.push('Permanent address is required');
-  }
-
-  if (!data.email?.trim()) {
-    errors.push('Email is required');
-  } else if (!/\S+@\S+\.\S+/.test(data.email)) {
-    errors.push('Invalid email format');
   }
 
   if (!data.phoneNumber?.trim()) {

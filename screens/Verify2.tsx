@@ -16,11 +16,6 @@ const jobChoice = ['Finance/Banking', 'Accounting', 'Admin/Office Support', 'Con
   'Agriculture/Farming', 'Construction/Trades', 'Self Employed/Freelance', 'Call Center/Customer Service'];
 
 export default function HomeScreen({ navigation }: Props){
-<<<<<<< HEAD
-=======
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [isDropdownVisible, setDropdownVisible] = useState(false);
->>>>>>> Try-Luis
   const { userData, resetUserData } = useUser();
 
 
@@ -44,35 +39,6 @@ export default function HomeScreen({ navigation }: Props){
 
   return (
     <View style={{flex:1, backgroundColor: "#FFFFFF"}}>
-<<<<<<< HEAD
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
-        <View style={styles.signUpContainer}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>Sign Up</Text>
-
-        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 14}}>
-            <View style={styles.navNot}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>1</Text>
-            </View>
-            <View style={styles.separator} />
-            <View style={styles.navNow}>
-              <View style={styles.navNow2}>
-                <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF' }}>2</Text>
-              </View>
-            </View>
-            <View style={styles.separator} />
-            <View style={styles.navNot}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#093FB4' }}>3</Text>
-            </View>
-          </View>
-  
-          <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.8, marginTop: 5, paddingLeft:8, paddingRight:8}}>
-            <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center' }}>Personal{'\n'}Information</Text>
-            <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center' }}>Verification</Text>
-            <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center' }}>Submission</Text>
-          </View>
-        </View>
-
-=======
     <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false}>
       <View style={styles.signUpContainer}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10 }}>Verification</Text>
@@ -99,8 +65,6 @@ export default function HomeScreen({ navigation }: Props){
         <Text style={{ fontSize: 12, fontWeight: 'bold', color: '#FFFFFF', textAlign:'center', marginLeft: 45 }}>Submission</Text>
       </View>
     </View>
-
->>>>>>> Try-Luis
 
         <Text style={{ fontSize: 23, fontWeight: 'bold', color: '#000000', marginTop: width * 1, marginLeft: 20 }}>Educational Background</Text>
         <View style={styles.fieldContainer}>
@@ -130,11 +94,7 @@ export default function HomeScreen({ navigation }: Props){
               <View style={styles.fieldContainer}>
               <Text style={styles.topics}>Current Job</Text>
               <TextInput
-<<<<<<< HEAD
                placeholder={userData.finalJob || userData.currentJob || ''}
-=======
-               placeholder={userData.currentJob }
->>>>>>> Try-Luis
                placeholderTextColor="#093FB4"
                editable={false}
                style={styles.inputFields}/>
@@ -169,7 +129,7 @@ export default function HomeScreen({ navigation }: Props){
 
         <Pressable onPress={() => navigation.navigate('ProfileScreen')}>
                   <View style={styles.nextButton}>
-                    <Text style={{fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10, textAlign: 'center'}} onPress={() => navigation.navigate('Submit')}>Submit</Text>
+                    <Text style={{fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginTop: 10, textAlign: 'center'}} onPress={() => navigation.navigate('FingerprintRegis')}>Scan Fingerprint</Text>
                   </View>
                 </Pressable>
       </ScrollView>
@@ -211,12 +171,6 @@ const styles = StyleSheet.create({
   separator: {
         marginVertical: 23,
         borderBottomColor: '#FFFFFF',
-<<<<<<< HEAD
-=======
-        //borderBottomWidth: StyleSheet.hairlineWidth,
-        //marginLeft: 15,
-        //marginRight: 15,
->>>>>>> Try-Luis
         borderWidth: 2,
         borderColor: '#FFFFFF',
         width: width * 0.15,
@@ -279,7 +233,7 @@ const styles = StyleSheet.create({
   nextButton: {
     marginTop: height * 0.03,
     marginBottom: height * 0.05,
-    width: width * 0.40,
+    width: width * 0.45,
     borderRadius: width * 0.05,
     backgroundColor: '#4B70E0',
     shadowColor: '#000000',
