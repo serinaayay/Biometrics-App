@@ -14,6 +14,10 @@ export type RootStackParamList = {
   Submission: undefined;
   FingerprintRegis: undefined;
   Submit: undefined;
+  EditPersonalInfo: undefined;
+  EditEducationalInfo: undefined;
+  EditEmploymentInfo: undefined;
+  EditSkills: undefined;
   FingerprintAuth?: {
     userId?: string;
     returnTo?: keyof RootStackParamList;
@@ -36,6 +40,11 @@ export type SubmitScreenProps = NativeStackScreenProps<RootStackParamList, 'Subm
 export type ProfileScreenProps = NativeStackScreenProps<RootStackParamList, 'ProfileScreen'>;
 export type SubmissionScreenProps = NativeStackScreenProps<RootStackParamList, 'Submission'>;
 export type FingerprintRegisScreenProps = NativeStackScreenProps<RootStackParamList, 'FingerprintRegis'>;
+export type EditEducationalInfoScreenProps = NativeStackScreenProps<RootStackParamList, 'EditEducationalInfo'>;
+export type EditEmploymentInfoScreenProps = NativeStackScreenProps<RootStackParamList, 'EditEmploymentInfo'>;
+export type EditPersonalInfoScreenProps = NativeStackScreenProps<RootStackParamList, 'EditPersonalInfo'>;
+export type EditSkillsScreenProps = NativeStackScreenProps<RootStackParamList, 'EditSkills'>;
+
 
 
 export type FingerprintAuthScreenProps = NativeStackScreenProps<

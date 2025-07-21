@@ -44,8 +44,23 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
     ]);
   };
 
-  const handleEdit = () => {
-    Alert.alert('Edit', 'Edit functionality will be available soon!');
+  const handleEdit = (section: 'personal' | 'educational' | 'skills' | 'employment') => {
+    switch (section) {
+      case 'personal':
+        navigation.navigate('EditPersonalInfo');
+        break;
+      case 'educational':
+        navigation.navigate('EditEducationalInfo');
+        break;
+      case 'skills':
+        navigation.navigate('EditSkills');
+        break;
+      case 'employment':
+        navigation.navigate('EditEmploymentInfo');
+        break;
+      default:
+        Alert.alert('Error', 'Unknown section to edit');
+    }
   };
 
   // Helper functions to format data
@@ -91,7 +106,7 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.headerContent2}>
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionTitle}>Personal Information</Text>
-          <TouchableOpacity style={styles.sectionpill} onPress={handleEdit}>
+          <TouchableOpacity style={styles.sectionpill} onPress={() => handleEdit('personal')}>
             <Text style={styles.sectionpillText}>Edit</Text>
           </TouchableOpacity>
         </View>
@@ -163,7 +178,7 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.headerContent2}>
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionTitle}>Educational Background</Text>
-          <TouchableOpacity style={styles.sectionpill} onPress={handleEdit}>
+          <TouchableOpacity style={styles.sectionpill} onPress={() => handleEdit('educational')}>
             <Text style={styles.sectionpillText}>Edit</Text>
           </TouchableOpacity>
         </View>
@@ -193,7 +208,7 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.headerContent2}>
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionTitle}>Skills</Text>
-          <TouchableOpacity style={styles.sectionpill} onPress={handleEdit}>
+          <TouchableOpacity style={styles.sectionpill} onPress={() => handleEdit('skills')}>
             <Text style={styles.sectionpillText}>Edit</Text>
           </TouchableOpacity>
         </View>
@@ -212,7 +227,7 @@ const ProfileScreen: React.FC<Props> = ({ navigation }) => {
       <View style={styles.headerContent2}>
         <View style={styles.sectionHeaderRow}>
           <Text style={styles.sectionTitle}>Employment Information</Text>
-          <TouchableOpacity style={styles.sectionpill} onPress={handleEdit}>
+          <TouchableOpacity style={styles.sectionpill} onPress={() => handleEdit('employment')}>
             <Text style={styles.sectionpillText}>Edit</Text>
           </TouchableOpacity>
         </View>

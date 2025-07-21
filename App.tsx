@@ -4,6 +4,10 @@ import FingerprintRegis from 'screens/FingerprintRegis';
 import { RegisProvider } from './context/RegisContext';
 import { UserProvider } from './context/UserContext';
 import { RootStackParamList } from './navigation/types';
+import EditEducationalInfo from './screens/EditEducationalInfo';
+import EditEmploymentInfo from './screens/EditEmploymentInfo';
+import EditPersonalInfo from './screens/EditPersonalInfo';
+import EditSkills from './screens/EditSkills';
 import Fingerprint from './screens/Fingerprint';
 import InfoRegister from './screens/InfoRegister';
 import LogIn from './screens/Login';
@@ -32,6 +36,11 @@ export default function App() {
             <Stack.Screen name="InfoRegister" component={InfoRegister} />
             <Stack.Screen name="Submit" component={Submit}/>
             <Stack.Screen name="FingerprintRegis" component={FingerprintRegis} />
+            <Stack.Screen name="EditEmploymentInfo" component={EditEmploymentInfo} />
+            <Stack.Screen name="EditEducationalInfo" component={EditEducationalInfo} />
+            <Stack.Screen name="EditPersonalInfo" component={EditPersonalInfo} />
+            <Stack.Screen name="EditSkills" component={EditSkills} />
+
           </Stack.Navigator>
         </NavigationContainer>
       </UserProvider>

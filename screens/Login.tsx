@@ -174,21 +174,12 @@ const LogInScreen = ({ navigation }: Props) => {
 
   return (
     <View style={styles.bgColor}>
-      <View style={{ alignItems: 'center', marginBottom: 12 }}>
-        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#FFFFFF', marginLeft: 5 }}>
+      <View style={{ alignItems: 'center', marginBottom: 15 }}>
+        <View style={styles.container}>
+        <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#000000ff', marginLeft: 5, alignSelf: 'center'}}>
           Sign In
         </Text>
-      </View>
 
-      <View
-        style={{
-          borderRadius: 12,
-          backgroundColor: '#FFFFFF',
-          padding: 4,
-          marginTop: 8,
-          marginBottom: 4,
-        }}>
-        
         {error ? (
           <View style={styles.errorContainer}>
             <Text style={styles.errorText}>{error}</Text>
@@ -226,7 +217,7 @@ const LogInScreen = ({ navigation }: Props) => {
         >
           <View
             style={{
-              backgroundColor: '#4B70E0',
+              backgroundColor: '#3a50a1ff',
               borderRadius: 12,
               padding: 4,
               marginTop: 20,
@@ -239,7 +230,7 @@ const LogInScreen = ({ navigation }: Props) => {
             {loading ? (
               <ActivityIndicator color="white" size="small" />
             ) : (
-              <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4 }}>
+              <Text style={{ color: 'white', fontSize: 18, fontWeight: '600', padding: 4 }}>
                 Log In
               </Text>
             )}
@@ -261,32 +252,33 @@ const LogInScreen = ({ navigation }: Props) => {
               alignItems: 'center',
             }}>
             <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4 }}>
-              Test API Connection
+              Scan fingerprint
             </Text>
           </View>
         </TouchableHighlight>
+        </View>
       </View>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text
           onPress={() => navigation.navigate('InfoRegister')}
           style={{
-            color: '#6289DD',
+            color: '#fbf7e9ff',
             fontSize: 14,
             fontWeight: '500',
-            marginLeft: 5,
-            marginTop: 3,
+            marginLeft: width * 0.02,
+            marginTop: -width * 0.01,
           }}>
           Sign Up
         </Text>
         <Text
           onPress={() => alert('Forgot password functionality not implemented yet')}
           style={{
-            color: '#6289DD',
+            color: '#fbf7e9ff',
             fontSize: 14,
             fontWeight: '500',
-            marginRight: 6,
-            marginTop: 3,
+            marginLeft: width * 0.02,
+            marginTop: -width * 0.01,
           }}>
           Forgot Password?
         </Text>
@@ -302,7 +294,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 42,
     justifyContent: 'center',
-    backgroundColor: '#093FB4',
+    backgroundColor: '#5E83AE',
   },
   separator: {
     marginVertical: 8,
@@ -313,8 +305,9 @@ const styles = StyleSheet.create({
   },
   Title: {
     fontSize: 20,
+    fontFamily: 'Inter 28pt Regular',
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#000000ff',
     marginTop: 10,
     marginLeft: 17,
   },
@@ -322,11 +315,21 @@ const styles = StyleSheet.create({
     height: 40,
     marginTop: height * 0.02,
     marginBottom: height * 0.01,
-    width: width * 0.7,
+    width: width * 0.68,
     marginLeft: 14,
     padding: 10,
     borderRadius: 10,
     backgroundColor: '#E6EBF3',
+  },
+  container: {
+    backgroundColor: '#FAF7F3',
+    padding: 4,
+    marginTop: 17,
+    justifyContent: 'center',
+    borderRadius: 15,
+    elevation: 5,
+    width: height * 0.36,
+    height: height * 0.55,
   },
   button: {
     height: 40,

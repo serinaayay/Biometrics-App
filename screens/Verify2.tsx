@@ -94,7 +94,7 @@ export default function HomeScreen({ navigation }: Props){
               <View style={styles.fieldContainer}>
               <Text style={styles.topics}>Current Job</Text>
               <TextInput
-               placeholder={userData.finalJob || userData.currentJob || ''}
+               placeholder={userData.finalJob || userData.currentJob || userData.otherJob}
                placeholderTextColor="#093FB4"
                editable={false}
                style={styles.inputFields}/>

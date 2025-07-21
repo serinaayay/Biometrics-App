@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Buffer } from 'buffer';
 import { useState } from 'react';
-import { ActivityIndicator, Alert, Dimensions, Pressable, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { getApiUrl } from '../config/api';
 import { useRegis, validateRegisData } from '../context/RegisContext';
 import '../global.css';
@@ -15,12 +15,24 @@ export default function InfoRegister({ navigation }: Props) {
   const [email1, setEmail1] = useState(regisData.email1 || '');
   const [password, setPassword] = useState(regisData.password || '');
   const [passwordError, setPasswordError] = useState('');
+  const [email1Error, setEmail1Error] = useState('');
   const [confirmPassword, setConfirmPassword] = useState(regisData.confirmPassword || '');
   const [loading, setLoading] = useState(false);
 
   const hashPassword = (password: string): string => {
     return Buffer.from(password + 'salt_key_here').toString('base64');
   };
+  
+  const validateEmail1 = (emailText: string) : void => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (emailText.includes(' ')) {
+        setEmail1Error('Email address should not contain spaces.')
+      } else if (!emailRegex.test(email1)) {
+        setEmail1Error('Please enter a valid email address!')
+      } else {
+        setEmail1Error('')
+      }
+    }
 
   // Password validation function
   const validatePasswords = (passwordText: string): void => { 
@@ -39,6 +51,12 @@ export default function InfoRegister({ navigation }: Props) {
     validatePasswords(text);
   };
 
+  const handleEmail1 = (text: string) => {
+      setEmail1(text)
+      validateEmail1(text)
+    
+    }
+  
   // Handle confirm password change with validation
   const handleConfirmPasswordChange = (text: string) => {
     setConfirmPassword(text);
@@ -178,20 +196,25 @@ export default function InfoRegister({ navigation }: Props) {
     <View style={styles.bgColor}>
       <View style={styles.container}>
       <View style={{ alignItems: 'center', marginBottom: 12 }}>
-        <Text style={{ fontSize: 30, fontWeight: 'bold', color:'#093FB4', marginTop: 10}}>
+        <Text style={{ fontSize: 30, fontWeight: 'bold', color:'#000000ff', marginTop: 10}}>
           Sign Up
         </Text>
       </View>
 
         <Text style={styles.Title}>Email</Text>
         <TextInput
-          style={styles.inputBox}
+          style={[styles.inputBox, email1Error ? { borderColor: '#DD3737', borderWidth: 2 } : {}]} 
           placeholder="Enter your email"
           value={email1}
-          onChangeText={setEmail1}
+          onChangeText={handleEmail1}
           keyboardType="email-address"
           autoCapitalize="none"
           editable={!loading}/>
+
+          {email1Error ? (
+          <Text style={{ color: '#DD3737', fontSize: 14, marginLeft: 17, marginTop: 5 }}>
+            {email1Error} 
+          </Text>) : null }
 
         <Text style={styles.Title}>Password</Text>
         <TextInput 
@@ -208,7 +231,7 @@ export default function InfoRegister({ navigation }: Props) {
           </Text>
         ) : (
           <Text style={{ color: '#666', fontSize: 12, marginLeft: 17, marginTop: 5 }}>
-            Password must be at least 8 characters long
+            Password must be at least 8 characters long.
           </Text>
         )}
 
@@ -225,7 +248,7 @@ export default function InfoRegister({ navigation }: Props) {
         <Pressable onPress={handleSignUp} disabled={loading} style={{ opacity: loading ? 0.7 : 1 }}>
           <View
             style={{
-              backgroundColor: loading ? '#9BB3F0' : '#4B70E0',
+              backgroundColor: loading ? '#9BB3F0' : '#3a50a1ff',
               borderRadius: 12,
               padding: 4,
               marginTop: 20,
@@ -238,55 +261,35 @@ export default function InfoRegister({ navigation }: Props) {
             {loading ? (
               <ActivityIndicator color="white" size="small" />
             ) : (
-              <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4 }}>
-                Continue to Sign Up
+              <Text style={{ color: 'white', fontSize: 17, fontWeight: '500', padding: 4 }}>
+                Continue
               </Text>
             )}
           </View>
 
         </Pressable>
-
-        <View style={styles.separator} />
-
-        <TouchableHighlight onPress={() => Alert.alert('Fingerprint', 'Fingerprint authentication coming soon!')}>
-          <View
-            style={{
-              backgroundColor: '#2D4078',
-              borderRadius: 12,
-              padding: 4,
-              marginTop: 5,
-              alignSelf: 'center',
-              width: width * 0.7,
-              alignItems: 'center',
-              marginBottom: 12,
-            }}>
-            <Text style={{ color: 'white', fontSize: 16, fontWeight: '500', padding: 4}}>
-              Scan Fingerprint
-            </Text>
-          </View>
-        </TouchableHighlight>
         </View>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <Text
           onPress={() => navigation.navigate('LogIn')}
           style={{
-            color: '#6289DD',
+            color: '#fbf7e9ff',
             fontSize: 14,
             fontWeight: '500',
-            marginLeft: 5,
-            marginTop: 0.02
+            marginLeft: width * 0.02,
+            marginTop: -width * 0.01,
           }}>
           Sign In
         </Text>
         <Text
           onPress={() => Alert.alert('Forgot Password', 'Forgot password functionality coming soon!')}
           style={{
-            color: '#6289DD',
+            color: '#fbf7e9ff',
             fontSize: 14,
             fontWeight: '500',
-            marginRight: 6,
-            marginTop: 0.02,
+            marginLeft: width * 0.02,
+            marginTop: -width * 0.01,
           }}>
           Forgot Password?
         </Text>
@@ -301,16 +304,17 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 42,
     justifyContent: 'center',
-    backgroundColor: '#093FB4',
+    backgroundColor: '#5E83AE',
   },
   container: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FAF7F3',
     padding: 4,
-    marginTop: 8,
+    marginTop: 10,
     marginBottom: 15,
     justifyContent: 'center',
     borderRadius: 15,
     elevation: 5,
+    height: height * 0.65,
   },
   separator: {
     marginVertical: 8,

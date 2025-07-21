@@ -9,7 +9,7 @@ interface ApiConfig {
 // Default configuration - update this for your local setup
 const API_CONFIG: ApiConfig = {
   // Option 1: Use your local IP (current setup)
-  baseUrl: 'http://192.168.68.169:5001',
+  baseUrl: 'http://192.168.68.210:5001',
   
   // Option 2: Use ngrok URL (when using ngrok)
   // baseUrl: 'https://your-ngrok-url.ngrok.io',
@@ -29,7 +29,7 @@ export const API_CONFIGS = {
   developer1: 'http://192.168.68.146:5001',
   
   // Teammate configuration - update with her IP when she runs the server
-  developer2: 'http://192.168.68.169:5001',
+  developer2: 'http://192.168.68.210:5001',
   
   // Ngrok URL (when using ngrok)
   ngrok: 'https://your-ngrok-url.ngrok.io',

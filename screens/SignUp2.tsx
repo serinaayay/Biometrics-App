@@ -37,7 +37,7 @@ export default function HomeScreen({ navigation }: Props) {
   const [degree, setDegree] = useState(userData.degree || '');
   const [university, setUniversity] = useState(userData.university || '');
   const [selectedJobChoice, setSelectedJob] = useState<string | null>(userData.currentJob || null);
-  const [currentJob, setCurrentJob] = useState(userData.otherJob || '');
+  const [currentJob, setCurrentJob] = useState(userData.otherJob ||  '');
   const [workExperience, setWorkExperience] = useState(userData.workExperience || '');
   const [sssNumber, setSssNumber] = useState(userData.sssNumber || '');
   const [sssNumberError, setSssNumberError] = useState('');
@@ -84,7 +84,7 @@ export default function HomeScreen({ navigation }: Props) {
   // Format based on length
   let formatted = sliced;
   if (sliced.length >= 3 && sliced.length <= 9) {
-    formatted = `09 ${sliced.slice(0, 2)}-${sliced.slice(2)}`;
+    formatted = `${sliced.slice(0, 2)}-${sliced.slice(2)}`;
   } else if (sliced.length === 10) {
     formatted = `${sliced.slice(0, 2)}-${sliced.slice(2, 9)}-${sliced.slice(9)}`;
   }
@@ -104,7 +104,7 @@ export default function HomeScreen({ navigation }: Props) {
   const saveUserToDatabase = async (completeUserData: any) => {
     try {
      
-      const API_BASE_URL = 'http://192.168.68.146:5001';
+      const API_BASE_URL = 'http://192.168.68.210:5001';
       
       console.log('Attempting to save user to database at:', API_BASE_URL);
       console.log('User data:', JSON.stringify(completeUserData));
@@ -140,7 +140,7 @@ export default function HomeScreen({ navigation }: Props) {
       educationalAttainment: selectedOption || '',
       degree: degree.trim(),
       university: university.trim(),
-      currentJobTitle: selectedJobChoice || '', // Use job selection for job title
+      currentJob: selectedJobChoice || '', // Use job selection for job title
       otherJob: isOther ? currentJob : '', // Only set otherJob if "Others" is selected
       skills: skills,
       workExperience: workExperience.trim(),
@@ -184,7 +184,7 @@ export default function HomeScreen({ navigation }: Props) {
       college: university.trim() || '', 
 
       // Employment information 
-      currentJobTitle: selectedJobChoice || '', // Use job selection, not education
+      currentJob: selectedJobChoice, // Use job selection, not education
       otherJob: isOther ? currentJob : '', // Set actual value, not type
       finalJob: isOther ? currentJob : selectedJobChoice, // Correctly determine final job
       workExperience: workExperience.trim() || '',
@@ -409,16 +409,6 @@ export default function HomeScreen({ navigation }: Props) {
               }}/>
               <Text style={{ fontSize: 15, fontWeight: 'bold', marginTop: 15, marginLeft: 9,}}>Others</Text>
           </View>
-
-          {isOther && (
-            <TextInput
-              placeholder="Enter your job title"
-              placeholderTextColor="#9E9A9A"
-              style={styles.inputFields}
-              value={currentJob}
-              onChangeText={setCurrentJob}
-            />
-          )}
 
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 5, marginLeft: 10 }}>
               Skills

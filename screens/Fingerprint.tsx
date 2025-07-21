@@ -28,7 +28,7 @@ export default function HomeScreen({ navigation }: Props) {
     try {
       // Use the correct IP address for React Native to connect to backend
       // For iOS Simulator: 127.0.0.1, For Android Emulator: 10.0.2.2, For physical device: your computer's IP
-      const API_BASE_URL = 'http://192.168.68.169:5001';
+      const API_BASE_URL = 'http://192.168.68.210:5001';
       
       console.log('Attempting to save user to database at:', API_BASE_URL);
       console.log('User data:', JSON.stringify(completeUserData, null, 2));
